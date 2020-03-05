@@ -1,0 +1,15 @@
+{
+  "config": {
+    "title": "Huawei sun2000 TKL",
+    "step": {
+      "confirm": {
+        "title": "Huawei sun2000 TKL",
+        "description": "Do you want to set up Huawei sun2000?"
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Only a single configuration of Huawei sun2000 is possible.",
+      "no_devices_found": "No Huawei sun2000 TKL devices found on the network."
+    }
+  }
+}

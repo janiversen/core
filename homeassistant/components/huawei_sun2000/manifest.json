@@ -1,0 +1,10 @@
+{
+  "domain": "Huawei_sun2000",
+  "name": "Huawei sun2000",
+  "config_flow": true,
+  "documentation": "https://www.home-assistant.io/integrations/huawei_sun2000",
+  "requirements": [ "pymodbus==1.5.2" ],
+  "ssdp": [],
+  "dependencies": [],
+  "codeowners": [ "@janiversen" ]
+}
