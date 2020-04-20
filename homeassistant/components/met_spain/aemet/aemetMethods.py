@@ -18,6 +18,14 @@ class setupAemetHelper(object):
         """
         return True
 
+    def verify_fullDate(self, parm) -> bool:
+        """Verify full data.
+
+        Format:
+            YYYY-MM-DD
+        """
+        return True
+        
     def verify_regionCode(self, parm) -> bool:
         """Verify region.
 
@@ -45,6 +53,31 @@ class setupAemetHelper(object):
         """
         return True
 
+    def verify_regionCode2(self, parm) -> bool:
+        """Verify region.
+
+        Format:
+            esp -> España
+            and -> Andalucía
+            arn -> Aragón
+            ast -> Asturias
+            bal -> Ballears, Illes
+            coo -> Canarias
+            can -> Cantabria
+            cle -> Castilla y León
+            clm -> Castilla - La Mancha
+            cat -> Cataluña
+            val -> Comunitat Valenciana
+            ext -> Extremadura
+            gal -> Galicia
+            mad -> Madrid, Comunidad de
+            mur -> Murcia, Región de
+            nav -> Navarra, Comunidad Foral de
+            pva -> País Vasco
+            rio -> Rioja, La
+        """
+        return True
+        
     def verify_forestRegion(self, parm) -> bool:
         """Verify forest region.
 
@@ -65,6 +98,18 @@ class setupAemetHelper(object):
         """
         return True
 
+    def verify_day12hour(self, parm) -> bool:
+        """Verify day 12 hour future.
+
+        Format:
+            a -> D+0 (00-12)
+            b -> D+0 (12-24)
+            c -> D+1 (00-12)
+            d -> D+1 (12-24)
+            e -> D+2 (00-12)
+            f -> D+2 (12-24)
+        """
+        return True
 
 class aemetMethods(object):
     """Class with methods to access AEMET data."""
@@ -191,101 +236,45 @@ class aemetMethods(object):
         url = "mapasygraficos/analisis"
         return self._aemetClient.request(url)
 
-    async def mapSignificantArchive(self, fecha, ambito, dia):
-        """Significant maps. Real time.
+    async def mapSignificantArchive(self, fullDate, region, day):
+        """Significant maps. Archive.
 
-        Mapas significativos de ámbito nacional o CCAA,
-        para una fecha dada y ese mismo día (D+0), al día siguiente (D+1)
-        o a los dos días (D+2), en el periodo horario de (00_12) ó (12-24).
-
-        :param str fecha: Fecha de elaboración (AAAA-MM-DD)
-        :param str ambito: Ámbito
-                                esp -> España
-                                and -> Andalucía
-                                arn -> Aragón
-                                ast -> Asturias
-                                bal -> Ballears, Illes
-                                coo -> Canarias
-                                can -> Cantabria
-                                cle -> Castilla y León
-                                clm -> Castilla - La Mancha
-                                cat -> Cataluña
-                                val -> Comunitat Valenciana
-                                ext -> Extremadura
-                                gal -> Galicia
-                                mad -> Madrid, Comunidad de
-                                mur -> Murcia, Región de
-                                nav -> Navarra, Comunidad Foral de
-                                pva -> País Vasco
-                                rio -> Rioja, La
-        :param str dia: Código de día
-                            a -> D+0 (00-12)
-                            b -> D+0 (12-24)
-                            c -> D+1 (00-12)
-                            d -> D+1 (12-24)
-                            e -> D+2 (00-12)
-                            f -> D+2 (12-24)
+        Significant maps of national scope or CCAA,
+        for a given date and that same day (D + 0), the next day (D + 1)
+        or two days (D + 2), in the hour period of (00_12) or (12-24).
+                
+        :param str(verify_fullDate: date 
+        :param str(verify_regionCode2) region: region
+        :param str(verify_day12hour) day: 12 hour day code
         """
-        return self._aemetClient.request(
-            "/api/mapasygraficos/mapassignificativos/fecha/" + fecha + "/ambito/" + dia
-        )
+        url = "/api/mapasygraficos/mapassignificativos/fecha/" + fullData + "/" + region + "/" + day
+        return self._aemetClient.request(url)
 
-    async def mapSignificantFuture(self, ambito, dia):
-        """Mapas significativos. Tiempo actual.
+    async def mapSignificantFuture(self, region, day):
+        """Significant maps. Archive.
 
-        Mapas significativos de ámbito nacional o CCAA,
-        para el día actual (D+0), al día siguiente (D+1)
-        o a los dos días (D+2), en el periodo horario de (00_12) ó (12-24).
+        Significant maps of national scope or CCAA,
+        or the current day (D + 0), the next day (D + 1)
+        r two days (D + 2), in the hour period of (00_12) or (12-24).
 
-        :param str ambito: Ámbito
-                                esp -> España
-                                and -> Andalucía
-                                arn -> Aragón
-                                ast -> Asturias
-                                bal -> Ballears, Illes
-                                coo -> Canarias
-                                can -> Cantabria
-                                cle -> Castilla y León
-                                clm -> Castilla - La Mancha
-                                cat -> Cataluña
-                                val -> Comunitat Valenciana
-                                ext -> Extremadura
-                                gal -> Galicia
-                                mad -> Madrid, Comunidad de
-                                mur -> Murcia, Región de
-                                nav -> Navarra, Comunidad Foral de
-                                pva -> País Vasco
-                                rio -> Rioja, La
-        :param str dia: Código de día
-                            a -> D+0 (00-12)
-                            b -> D+0 (00-12)
-                            c -> D+1 (00-12)
-                            d -> D+1 (12-24)
-                            e -> D+2 (00-12)
-                            f -> D+2 (12-24)
+        :param str(verify_regionCode2) region: region
+        :param str(verify_day12hour) day: 12 hour day code
         """
-        return self.aemetClient.request(
-            "/api/mapasygraficos/mapassignificativos/" + ambito + "/" + dia
-        )
+        url = "/api/mapasygraficos/mapassignificativos/" + region + "/" + day
+        return self._aemetClient.request(url)        
 
 
-class ObservacionConvencionalApi(object):
-    """Datos de observación."""
+    async def ObservationDataNow(self):
+        """Observation data. Current time.
 
-    def __init__(self):
-        """Initialize."""
-        self._aemetClient = aemetClient
-
-    async def datos_de_observacin__tiempo_actual_(self):
-        """Datos de observación. Tiempo actual.
-
-        Datos de observación horarios de las últimas 24 horas
-        todas las estaciones meteorológicas de las que se han recibido
-        datos en ese período. Frecuencia de actualización: continuamente.
+        Hourly observation data for the last 24 hours
+        all weather stations from which they have been received
+        data in that period. Update frequency: continuously.
         """
-        return self._aemetClient.request("/api/observacion/convencional/todas")
+        url = "/api/observacion/convencional/todas"
+        return self._aemetClient.request(url)
 
-    async def datos_de_observacin__tiempo_actual_1(self, idema):
+    async def ObservationDataNowSignle(self, idema):
         """Datos de observación. Tiempo actual.
 
         Datos de observación horarios de las últimas 24 horas
@@ -1172,3 +1161,36 @@ class ValoresClimatologicosApi(object):
             + "/estacion/"
             + idema
         )
+        
+        """ Example client: 
+        import http.client
+
+conn = http.client.HTTPSConnection("opendata.aemet.es")
+
+headers = {
+    'cache-control': "no-cache"
+    }
+
+conn.request("GET", "/opendata/api/valores/climatologicos/inventarioestaciones/todasestaciones/?api_key=jyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqbW9udGVyb2dAYWVtZXQuZXMiLCJqdGkiOiI3NDRiYmVhMy02NDEyLTQxYWMtYmYzOC01MjhlZWJlM2FhMWEiLCJleHAiOjE0NzUwNTg3ODcsImlzcyI6IkFFTUVUIiwiaWF0IjoxNDc0NjI2Nzg3LCJ1c2VySWQiOiI3NDRiYmVhMy02NDEyLTQxYWMtYmYzOC01MjhlZWJlM2FhMWEiLCJyb2xlIjoiIn0.xh3LstTlsP9h5cxz3TLmYF4uJwhOKzA0B6-vH8lPGGw", headers=headers)
+
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))
+"""
+
+""" Example request:
+import requests
+
+url = "https://opendata.aemet.es/opendata/api/valores/climatologicos/inventarioestaciones/todasestaciones/"
+
+querystring = {"api_key":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqbW9udGVyb2dAYWVtZXQuZXMiLCJqdGkiOiI3NDRiYmVhMy02NDEyLTQxYWMtYmYzOC01MjhlZWJlM2FhMWEiLCJleHAiOjE0NzUwNTg3ODcsImlzcyI6IkFFTUVUIiwiaWF0IjoxNDc0NjI2Nzg3LCJ1c2VySWQiOiI3NDRiYmVhMy02NDEyLTQxYWMtYmYzOC01MjhlZWJlM2FhMWEiLCJyb2xlIjoiIn0.xh3LstTlsP9h5cxz3TLmYF4uJwhOKzA0B6-vH8lPGGw"}
+
+headers = {
+    'cache-control': "no-cache"
+    }
+
+response = requests.request("GET", url, headers=headers, params=querystring)
+
+print(response.text)
+"""
