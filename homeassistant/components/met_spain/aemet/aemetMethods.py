@@ -4,113 +4,6 @@
 from .aemetClient import aemetClient
 
 
-class setupAemetHelper(object):
-    """Class with helper functions for calling aemet."""
-
-    def __init__(self):
-        """Initialize."""
-
-    def verify_fullDateTime(self, parm) -> bool:
-        """Verify full data time.
-
-        Format:
-            YYYY-MM-DDTHH:MM:SSUTC
-        """
-        return True
-
-    def verify_fullDate(self, parm) -> bool:
-        """Verify full data.
-
-        Format:
-            YYYY-MM-DD
-        """
-        return True
-        
-    def verify_regionCode(self, parm) -> bool:
-        """Verify region.
-
-        Format:
-            esp -> España
-            61  -> Andalucía
-            62  -> Aragón
-            63  -> Asturias, Principado de
-            64  -> Ballears, Illes
-            78  -> Ceuta
-            65  -> Canarias
-            66  -> Cantabria
-            67  -> Castilla y León
-            68  -> Castilla - La Mancha
-            69  -> Cataluña
-            77  -> Comunitat Valenciana
-            70  -> Extremadura
-            71  -> Galicia
-            72  -> Madrid, Comunidad de
-            79  -> Melilla
-            73  -> Murcia, Región de
-            74  -> Navarra, Comunidad Foral de
-            75  -> País Vasco
-            76  -> Rioja, La
-        """
-        return True
-
-    def verify_regionCode2(self, parm) -> bool:
-        """Verify region.
-
-        Format:
-            esp -> España
-            and -> Andalucía
-            arn -> Aragón
-            ast -> Asturias
-            bal -> Ballears, Illes
-            coo -> Canarias
-            can -> Cantabria
-            cle -> Castilla y León
-            clm -> Castilla - La Mancha
-            cat -> Cataluña
-            val -> Comunitat Valenciana
-            ext -> Extremadura
-            gal -> Galicia
-            mad -> Madrid, Comunidad de
-            mur -> Murcia, Región de
-            nav -> Navarra, Comunidad Foral de
-            pva -> País Vasco
-            rio -> Rioja, La
-        """
-        return True
-        
-    def verify_forestRegion(self, parm) -> bool:
-        """Verify forest region.
-
-        Format:
-            p -> Península
-            b -> Baleares
-            c -> Canarias
-        """
-        return True
-
-    def verify_3day(self, parm) -> bool:
-        """Verify 3 day future.
-
-        Format:
-            1 -> d + 1
-            2 -> d + 2
-            3 -> d + 3
-        """
-        return True
-
-    def verify_day12hour(self, parm) -> bool:
-        """Verify day 12 hour future.
-
-        Format:
-            a -> D+0 (00-12)
-            b -> D+0 (12-24)
-            c -> D+1 (00-12)
-            d -> D+1 (12-24)
-            e -> D+2 (00-12)
-            f -> D+2 (12-24)
-        """
-        return True
-
 class aemetMethods(object):
     """Class with methods to access AEMET data."""
 
@@ -118,1079 +11,6677 @@ class aemetMethods(object):
         """Initialize."""
         self._aemetClient = aemetClient()
 
-    # --- Meteorological phenomena warnings. ---
 
-    async def warningsMeteorologicalPhenomenaArchive(self, startDT, endDT):
-        """Meteorological phenomena warnings, archive.
+from __future__ import absolute_import
 
-        Advisories of adverse Meteorological Phenomena either newest or
-        for the selected date range.
+# flake8: noqa
 
-        :param str(verify_fullDateTime) startDT,
-        :param str(verify_fullDateTime) endDT
+# import apis into api package
+from swagger_client.api.avisos_cap_api import AvisosCapApi
+from swagger_client.api.indices_incendios_api import IndicesIncendiosApi
+from swagger_client.api.informacion_satelite_api import InformacionSateliteApi
+from swagger_client.api.maestro_api import MaestroApi
+from swagger_client.api.mapas_y_graficos_api import MapasYGraficosApi
+from swagger_client.api.observacion_convencional_api import ObservacionConvencionalApi
+from swagger_client.api.prediccion_maritima_api import PrediccionMaritimaApi
+from swagger_client.api.predicciones_especificas_api import PrediccionesEspecificasApi
+from swagger_client.api.predicciones_normalizadas_texto_api import PrediccionesNormalizadasTextoApi
+from swagger_client.api.productos_climatologicos_api import ProductosClimatologicosApi
+from swagger_client.api.red_radares_api import RedRadaresApi
+from swagger_client.api.red_rayos_api import RedRayosApi
+from swagger_client.api.redes_especiales_api import RedesEspecialesApi
+from swagger_client.api.valores_climatologicos_api import ValoresClimatologicosApi
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
+
+
+class AvisosCapApi(object):
+    """NOTE: This class is auto generated by the swagger code generator program.
+
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
+
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
+
+    def avisos_de_fenmenos_meteorolgicos_adversos__archivo(self, fecha_ini_str, fecha_fin_str, **kwargs):  # noqa: E501
+        """Avisos de Fenómenos Meteorológicos Adversos. Archivo.  # noqa: E501
+
+         Avisos de Fenómenos Meteorológicos adversos para el rango de fechas seleccionado (datos desde 18/06/2018).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.avisos_de_fenmenos_meteorolgicos_adversos__archivo(fecha_ini_str, fecha_fin_str, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha_ini_str: Fecha Inicial (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :param str fecha_fin_str: Fecha Final (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "avisos_cap/archivo/fechaini/" + startDT + "/fechafin/" + endDT
-        return self._aemetClient.request(url)
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.avisos_de_fenmenos_meteorolgicos_adversos__archivo_with_http_info(fecha_ini_str, fecha_fin_str, **kwargs)  # noqa: E501
+        else:
+            (data) = self.avisos_de_fenmenos_meteorolgicos_adversos__archivo_with_http_info(fecha_ini_str, fecha_fin_str, **kwargs)  # noqa: E501
+            return data
 
-    async def warningsMeteorologicalPhenomena(self, area):
-        """Meteorological phenomena warnings, newest.
+    def avisos_de_fenmenos_meteorolgicos_adversos__archivo_with_http_info(self, fecha_ini_str, fecha_fin_str, **kwargs):  # noqa: E501
+        """Avisos de Fenómenos Meteorológicos Adversos. Archivo.  # noqa: E501
 
-        Advisories of adverse Meteorological Phenomena either newest or
-        for the selected area.
+         Avisos de Fenómenos Meteorológicos adversos para el rango de fechas seleccionado (datos desde 18/06/2018).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.avisos_de_fenmenos_meteorolgicos_adversos__archivo_with_http_info(fecha_ini_str, fecha_fin_str, async_req=True)
+        >>> result = thread.get()
 
-        :param str(verify_regionCode) area
+        :param async_req bool
+        :param str fecha_ini_str: Fecha Inicial (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :param str fecha_fin_str: Fecha Final (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "avisos_cap/ultimoelaborado/area/" + area
-        return self._aemetClient.request(url)
 
-    # --- Fire rates. ---
+        all_params = ['fecha_ini_str', 'fecha_fin_str']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-    async def forestFireRiskMap(self, area):
-        """Meteorological risk map with estimated levels of forest fires.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method avisos_de_fenmenos_meteorolgicos_adversos__archivo" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'fecha_ini_str' is set
+        if ('fecha_ini_str' not in params or
+                params['fecha_ini_str'] is None):
+            raise ValueError("Missing the required parameter `fecha_ini_str` when calling `avisos_de_fenmenos_meteorolgicos_adversos__archivo`")  # noqa: E501
+        # verify the required parameter 'fecha_fin_str' is set
+        if ('fecha_fin_str' not in params or
+                params['fecha_fin_str'] is None):
+            raise ValueError("Missing the required parameter `fecha_fin_str` when calling `avisos_de_fenmenos_meteorolgicos_adversos__archivo`")  # noqa: E501
 
-        Last map prepared with estimated meteorological risk levels for
-        forest fires in the selected area
+        collection_formats = {}
 
-        :param str(verify_forestRegion) area
+        path_params = {}
+        if 'fecha_ini_str' in params:
+            path_params['fechaIniStr'] = params['fecha_ini_str']  # noqa: E501
+        if 'fecha_fin_str' in params:
+            path_params['fechaFinStr'] = params['fecha_fin_str']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/avisos_cap/archivo/fechaini/{fechaIniStr}/fechafin/{fechaFinStr}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def avisos_de_fenmenos_meteorolgicos_adversos__ltimo_(self, area, **kwargs):  # noqa: E501
+        """Avisos de Fenómenos Meteorológicos Adversos. Último.  # noqa: E501
+
+         Últimos Avisos de Fenómenos Meteorológicos adversos elaborado para el área seleccionada.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.avisos_de_fenmenos_meteorolgicos_adversos__ltimo_(area, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str area:  | Código | Área | |----------|----------| | esp  | España| | 61  | Andalucía   | | 62  | Aragón   | | 63  | Asturias, Principado de  | | 64  | Ballears, Illes   | | 78  | Ceuta   | | 65  | Canarias   | | 66  | Cantabria   | | 67  | Castilla y León   | | 68  | Castilla - La Mancha   | | 69  | Cataluña   | | 77  | Comunitat Valenciana   | | 70  | Extremadura   | | 71  | Galicia   | | 72  | Madrid, Comunidad de    | | 79  | Melilla   | | 73  | Murcia, Región de   | | 74  | Navarra, Comunidad Foral de   | | 75  | País Vasco | | 76  | Rioja, La (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "incendios/mapasriesgo/estimado/area/" + area
-        return self._aemetClient.request(url)
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.avisos_de_fenmenos_meteorolgicos_adversos__ltimo__with_http_info(area, **kwargs)  # noqa: E501
+        else:
+            (data) = self.avisos_de_fenmenos_meteorolgicos_adversos__ltimo__with_http_info(area, **kwargs)  # noqa: E501
+            return data
 
-    async def forestFireRiskMapFuture(self, day, area):
-        """Meteorological risk map with estimated levels of forest fires.
+    def avisos_de_fenmenos_meteorolgicos_adversos__ltimo__with_http_info(self, area, **kwargs):  # noqa: E501
+        """Avisos de Fenómenos Meteorológicos Adversos. Último.  # noqa: E501
 
-        Last map prepared with estimated meteorological risk levels for
-        forest fires in the selected area
+         Últimos Avisos de Fenómenos Meteorológicos adversos elaborado para el área seleccionada.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.avisos_de_fenmenos_meteorolgicos_adversos__ltimo__with_http_info(area, async_req=True)
+        >>> result = thread.get()
 
-        :param str(verify_3day) day
-        :param str(verify_forestRegion) area
+        :param async_req bool
+        :param str area:  | Código | Área | |----------|----------| | esp  | España| | 61  | Andalucía   | | 62  | Aragón   | | 63  | Asturias, Principado de  | | 64  | Ballears, Illes   | | 78  | Ceuta   | | 65  | Canarias   | | 66  | Cantabria   | | 67  | Castilla y León   | | 68  | Castilla - La Mancha   | | 69  | Cataluña   | | 77  | Comunitat Valenciana   | | 70  | Extremadura   | | 71  | Galicia   | | 72  | Madrid, Comunidad de    | | 79  | Melilla   | | 73  | Murcia, Región de   | | 74  | Navarra, Comunidad Foral de   | | 75  | País Vasco | | 76  | Rioja, La (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "incendios/mapasriesgo/previsto/dia/" + day + "/area/" + area
-        return self._aemetClient.request(url)
 
-    # --- Satellite information ---
+        all_params = ['area']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-    async def satelliteVegetationImage(self):
-        """Image of normalized vegetation index.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method avisos_de_fenmenos_meteorolgicos_adversos__ltimo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'area' is set
+        if ('area' not in params or
+                params['area'] is None):
+            raise ValueError("Missing the required parameter `area` when calling `avisos_de_fenmenos_meteorolgicos_adversos__ltimo_`")  # noqa: E501
 
-        This image is made with a combination of the channel data visible
-        and near infrared from the NOAA-19 satellite, which gives us an
-        idea of the development of the vegetation. This is so because the
-        vegetation strongly absorbs visible channel radiation but strongly
-        reflects the near infrared one. This image is renewed on Thursdays
-        at the last minute and contains the accumulated data from the last
-        week.
+        collection_formats = {}
+
+        path_params = {}
+        if 'area' in params:
+            path_params['area'] = params['area']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/avisos_cap/ultimoelaborado/area/{area}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
+
+
+class IndicesIncendiosApi(object):
+    """NOTE: This class is auto generated by the swagger code generator program.
+
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
+
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
+
+    def mapa_de_niveles_de_riesgo_estimado_meteorolgico_de_incendios_forestales_(self, area, **kwargs):  # noqa: E501
+        """Mapa de niveles de riesgo estimado meteorológico de incendios forestales.  # noqa: E501
+
+        Último mapa elaborado de niveles de riesgo estimado meteorológico de incendios forestales para el área pasada por parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapa_de_niveles_de_riesgo_estimado_meteorolgico_de_incendios_forestales_(area, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str area:  | Código | Área | |----------|----------| | p  | Península   | | b  | Baleares   | | c  | Canarias    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "/api/satelites/producto/nvdi"
-        return self._aemetClient.request(url)
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.mapa_de_niveles_de_riesgo_estimado_meteorolgico_de_incendios_forestales__with_http_info(area, **kwargs)  # noqa: E501
+        else:
+            (data) = self.mapa_de_niveles_de_riesgo_estimado_meteorolgico_de_incendios_forestales__with_http_info(area, **kwargs)  # noqa: E501
+            return data
 
-    async def satelliteSeaWaterTemperatura(self):
-        """Image of sea water temperature.
+    def mapa_de_niveles_de_riesgo_estimado_meteorolgico_de_incendios_forestales__with_http_info(self, area, **kwargs):  # noqa: E501
+        """Mapa de niveles de riesgo estimado meteorológico de incendios forestales.  # noqa: E501
 
-        Image obtained with a combination of channel data infrared from
-        the NOAA-19 satellite, which gives us the temperature from the sea
-        surface. This image is renewed every day at the last minute and
-        contains the accumulated data of the last seven days.
+        Último mapa elaborado de niveles de riesgo estimado meteorológico de incendios forestales para el área pasada por parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapa_de_niveles_de_riesgo_estimado_meteorolgico_de_incendios_forestales__with_http_info(area, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str area:  | Código | Área | |----------|----------| | p  | Península   | | b  | Baleares   | | c  | Canarias    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "satelites/producto/sst"
-        return self._aemetClient.request(url)
 
+        all_params = ['area']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-    # --- Specific information of the municipalities in Spain ---
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method mapa_de_niveles_de_riesgo_estimado_meteorolgico_de_incendios_forestales_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'area' is set
+        if ('area' not in params or
+                params['area'] is None):
+            raise ValueError("Missing the required parameter `area` when calling `mapa_de_niveles_de_riesgo_estimado_meteorolgico_de_incendios_forestales_`")  # noqa: E501
 
-    async def municipalityInformation(self, municipality):
-        """Municipality information.
+        collection_formats = {}
 
-        get information about the selected municipality
+        path_params = {}
+        if 'area' in params:
+            path_params['area'] = params['area']  # noqa: E501
 
-        :param str municipality: see getMunicipalities()
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/incendios/mapasriesgo/estimado/area/{area}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def mapa_de_niveles_de_riesgo_previsto_meteorolgico_de_incendios_forestales_(self, dia, area, **kwargs):  # noqa: E501
+        """Mapa de niveles de riesgo previsto meteorológico de incendios forestales.  # noqa: E501
+
+        Mapa elaborado de niveles de riesgo estimado meteorológico de incendios forestales para el día y el área pasados por parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapa_de_niveles_de_riesgo_previsto_meteorolgico_de_incendios_forestales_(dia, area, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str dia:  | Código | Día | |----------|----------| | 1  | Mañana   | | 2  | Pasado Mañana   | | 3  | Dentro de 3 días    (required)
+        :param str area:  | Código | Área | |----------|----------| | p  | Península   | | b  | Baleares   | | c  | Canarias    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "maestro/municipio/" + municipality
-        return self._aemetClient.request(url)
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.mapa_de_niveles_de_riesgo_previsto_meteorolgico_de_incendios_forestales__with_http_info(dia, area, **kwargs)  # noqa: E501
+        else:
+            (data) = self.mapa_de_niveles_de_riesgo_previsto_meteorolgico_de_incendios_forestales__with_http_info(dia, area, **kwargs)  # noqa: E501
+            return data
 
-    async def getMunicipalities(self):
-        """Get list of municipalities
+    def mapa_de_niveles_de_riesgo_previsto_meteorolgico_de_incendios_forestales__with_http_info(self, dia, area, **kwargs):  # noqa: E501
+        """Mapa de niveles de riesgo previsto meteorológico de incendios forestales.  # noqa: E501
 
-        Returns all the municipalities in Spain.
-        This service is useful for obtaining information to use other
-        elements of AEMET OpenData, such as the prediction of
-        municipalities for 7 days or by hours since it returns the id
-        of the municipality that we need.
+        Mapa elaborado de niveles de riesgo estimado meteorológico de incendios forestales para el día y el área pasados por parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapa_de_niveles_de_riesgo_previsto_meteorolgico_de_incendios_forestales__with_http_info(dia, area, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str dia:  | Código | Día | |----------|----------| | 1  | Mañana   | | 2  | Pasado Mañana   | | 3  | Dentro de 3 días    (required)
+        :param str area:  | Código | Área | |----------|----------| | p  | Península   | | b  | Baleares   | | c  | Canarias    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "maestro/municipios"
-        return self._aemetClient.request(url)
+
+        all_params = ['dia', 'area']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method mapa_de_niveles_de_riesgo_previsto_meteorolgico_de_incendios_forestales_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'dia' is set
+        if ('dia' not in params or
+                params['dia'] is None):
+            raise ValueError("Missing the required parameter `dia` when calling `mapa_de_niveles_de_riesgo_previsto_meteorolgico_de_incendios_forestales_`")  # noqa: E501
+        # verify the required parameter 'area' is set
+        if ('area' not in params or
+                params['area'] is None):
+            raise ValueError("Missing the required parameter `area` when calling `mapa_de_niveles_de_riesgo_previsto_meteorolgico_de_incendios_forestales_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'dia' in params:
+            path_params['dia'] = params['dia']  # noqa: E501
+        if 'area' in params:
+            path_params['area'] = params['area']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/incendios/mapasriesgo/previsto/dia/{dia}/area/{area}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
 
 
-    # --- Maps and grafics ---
+from __future__ import absolute_import
 
-    async def mapNewestAnalysis(self):
-        """Analysis maps. Newest.
+import re  # noqa: F401
 
-        These maps show the configuration of the surface pressure using
-        isobars (lines of equal pressure), high areas (A, a) and low (B, b)
-        pressure and fronts in Europe and the North Atlantic.
-        The analysis map presents the state of the atmosphere at the time
-        corresponding and the most relevant phenomena observed in Spain.
-        Update frequency: every 12 hours (00, 12).
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
+
+
+class InformacionSateliteApi(object):
+    """NOTE: This class is auto generated by the swagger code generator program.
+
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
+
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
+
+    def ndice_normalizado_de_vegetacin_(self, **kwargs):  # noqa: E501
+        """Índice normalizado de vegetación.  # noqa: E501
+
+        Esta imagen se realiza con una combinación de los datos del canal visible y del infrarrojo cercano del satélite NOAA-19, que nos da una idea del desarrollo de la vegetación. Esto es así debido a que la vegetación absorbe fuertemente la radiación del canal visible, pero refleja fuertemente la del infrarrojo cercano. Esta imagen se renueva los jueves a última hora y contiene los datos acumulados de la última semana.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.ndice_normalizado_de_vegetacin_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "mapasygraficos/analisis"
-        return self._aemetClient.request(url)
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.ndice_normalizado_de_vegetacin__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.ndice_normalizado_de_vegetacin__with_http_info(**kwargs)  # noqa: E501
+            return data
 
-    async def mapSignificantArchive(self, fullDate, region, day):
-        """Significant maps. Archive.
+    def ndice_normalizado_de_vegetacin__with_http_info(self, **kwargs):  # noqa: E501
+        """Índice normalizado de vegetación.  # noqa: E501
 
-        Significant maps of national scope or CCAA,
-        for a given date and that same day (D + 0), the next day (D + 1)
-        or two days (D + 2), in the hour period of (00_12) or (12-24).
-                
-        :param str(verify_fullDate: date 
-        :param str(verify_regionCode2) region: region
-        :param str(verify_day12hour) day: 12 hour day code
+        Esta imagen se realiza con una combinación de los datos del canal visible y del infrarrojo cercano del satélite NOAA-19, que nos da una idea del desarrollo de la vegetación. Esto es así debido a que la vegetación absorbe fuertemente la radiación del canal visible, pero refleja fuertemente la del infrarrojo cercano. Esta imagen se renueva los jueves a última hora y contiene los datos acumulados de la última semana.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.ndice_normalizado_de_vegetacin__with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "/api/mapasygraficos/mapassignificativos/fecha/" + fullData + "/" + region + "/" + day
-        return self._aemetClient.request(url)
 
-    async def mapSignificantFuture(self, region, day):
-        """Significant maps. Archive.
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Significant maps of national scope or CCAA,
-        or the current day (D + 0), the next day (D + 1)
-        r two days (D + 2), in the hour period of (00_12) or (12-24).
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method ndice_normalizado_de_vegetacin_" % key
+                )
+            params[key] = val
+        del params['kwargs']
 
-        :param str(verify_regionCode2) region: region
-        :param str(verify_day12hour) day: 12 hour day code
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/satelites/producto/nvdi', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def temperatura_del_agua_del_mar_(self, **kwargs):  # noqa: E501
+        """Temperatura del agua del mar.  # noqa: E501
+
+        Imagen obtenida con una combinación de los datos de los canales infrarrojos del satélite NOAA-19, que nos da la temperatura de la superficie del mar. Esta imagen se renueva todos los días a última hora y contiene los datos acumulados de los últimos siete días.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.temperatura_del_agua_del_mar_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "/api/mapasygraficos/mapassignificativos/" + region + "/" + day
-        return self._aemetClient.request(url)        
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.temperatura_del_agua_del_mar__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.temperatura_del_agua_del_mar__with_http_info(**kwargs)  # noqa: E501
+            return data
 
+    def temperatura_del_agua_del_mar__with_http_info(self, **kwargs):  # noqa: E501
+        """Temperatura del agua del mar.  # noqa: E501
 
-    async def ObservationDataNow(self):
-        """Observation data. Current time.
+        Imagen obtenida con una combinación de los datos de los canales infrarrojos del satélite NOAA-19, que nos da la temperatura de la superficie del mar. Esta imagen se renueva todos los días a última hora y contiene los datos acumulados de los últimos siete días.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.temperatura_del_agua_del_mar__with_http_info(async_req=True)
+        >>> result = thread.get()
 
-        Hourly observation data for the last 24 hours
-        all weather stations from which they have been received
-        data in that period. Update frequency: continuously.
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        url = "/api/observacion/convencional/todas"
-        return self._aemetClient.request(url)
 
-    async def ObservationDataNowSignle(self, idema):
-        """Datos de observación. Tiempo actual.
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Datos de observación horarios de las últimas 24 horas
-        de la estación meterológica que se pasa como parámetro (idema).
-        Frecuencia de actualización: continuamente.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method temperatura_del_agua_del_mar_" % key
+                )
+            params[key] = val
+        del params['kwargs']
 
-        :param str idema: Índicativo climatológico de la EMA
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/satelites/producto/sst', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
+
+
+class MaestroApi(object):
+    """NOTE: This class is auto generated by the swagger code generator program.
+
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
+
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
+
+    def get_municipio_using_get(self, municipio, **kwargs):  # noqa: E501
+        """getMunicipio  # noqa: E501
+
+        Retorna información específica del municipio de España que se le pasa como parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_municipio_using_get(municipio, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str municipio: Municipio (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/observacion/convencional/datos/estacion/" + idema
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.get_municipio_using_get_with_http_info(municipio, **kwargs)  # noqa: E501
+        else:
+            (data) = self.get_municipio_using_get_with_http_info(municipio, **kwargs)  # noqa: E501
+            return data
 
-    async def mensajes_de_observacin__ltimo_elaborado_(self, tipomensaje):
-        """Mensajes de observación. Último elaborado.
+    def get_municipio_using_get_with_http_info(self, municipio, **kwargs):  # noqa: E501
+        """getMunicipio  # noqa: E501
 
-        Últimos mensajes de observación. Para los SYNOP y TEMP devuelve
-        los mensajes de las últimas 24 horas y para los CLIMAT de
-        los 40 últimos dias. Se pasa como parámetro el tipo de mensaje
-        que se desea (tipomensaje). El resultado de la petición es
-        un fichero en formato tar.gz, que contiene los boletines en
-        formato json y bufr.
+        Retorna información específica del municipio de España que se le pasa como parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_municipio_using_get_with_http_info(municipio, async_req=True)
+        >>> result = thread.get()
 
-        :param str tipomensaje: Tipo de Mensaje
-                                    climat -> CLIMAT
-                                    synop  -> SYNOP
-                                    temp   -> TEMP
+        :param async_req bool
+        :param str municipio: Municipio (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/observacion/convencional/mensajes/tipomensaje/" + tipomensaje
-        )
+
+        all_params = ['municipio']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method get_municipio_using_get" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'municipio' is set
+        if ('municipio' not in params or
+                params['municipio'] is None):
+            raise ValueError("Missing the required parameter `municipio` when calling `get_municipio_using_get`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'municipio' in params:
+            path_params['municipio'] = params['municipio']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/maestro/municipio/{municipio}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def get_municipios_using_get(self, **kwargs):  # noqa: E501
+        """getMunicipios  # noqa: E501
+
+        Retorna todos los municipios de España. Este servicio es útil para obtener información para utilizar otros elementos de AEMET OpenData, como por ejemplo, la predicción de municipios para 7 días o por  horas ya que nos retorna el id del municipio que necesitamos.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_municipios_using_get(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.get_municipios_using_get_with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.get_municipios_using_get_with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def get_municipios_using_get_with_http_info(self, **kwargs):  # noqa: E501
+        """getMunicipios  # noqa: E501
+
+        Retorna todos los municipios de España. Este servicio es útil para obtener información para utilizar otros elementos de AEMET OpenData, como por ejemplo, la predicción de municipios para 7 días o por  horas ya que nos retorna el id del municipio que necesitamos.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_municipios_using_get_with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method get_municipios_using_get" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/maestro/municipios', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
+
+
+class MapasYGraficosApi(object):
+    """NOTE: This class is auto generated by the swagger code generator program.
+
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
+
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
+
+    def mapas_de_anlisis__ltima_pasada_(self, **kwargs):  # noqa: E501
+        """Mapas de análisis. Última pasada.  # noqa: E501
+
+        Estos mapas muestran la configuración de la presión en superficie usando isobaras (lineas de igual presión), áreas de alta (A, a) y baja (B, b) presión y los frentes en Europa y el Atlántico Norte.El mapa de análisis presenta el estado de la atmósfera a la hora correspondiente y los fenómenos más relevantes observados en España. Periodicidad de actualización: cada 12 horas (00, 12).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapas_de_anlisis__ltima_pasada_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.mapas_de_anlisis__ltima_pasada__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.mapas_de_anlisis__ltima_pasada__with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def mapas_de_anlisis__ltima_pasada__with_http_info(self, **kwargs):  # noqa: E501
+        """Mapas de análisis. Última pasada.  # noqa: E501
+
+        Estos mapas muestran la configuración de la presión en superficie usando isobaras (lineas de igual presión), áreas de alta (A, a) y baja (B, b) presión y los frentes en Europa y el Atlántico Norte.El mapa de análisis presenta el estado de la atmósfera a la hora correspondiente y los fenómenos más relevantes observados en España. Periodicidad de actualización: cada 12 horas (00, 12).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapas_de_anlisis__ltima_pasada__with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method mapas_de_anlisis__ltima_pasada_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/mapasygraficos/analisis', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def mapas_significativos__tiempo_actual_(self, fecha, ambito, dia, **kwargs):  # noqa: E501
+        """Mapas significativos. Tiempo actual.  # noqa: E501
+
+        Mapas significativos de ámbito nacional o CCAA, para una fecha dada y ese mismo día (D+0),  al día siguiente (D+1) o a los dos días (D+2), en el periodo horario de (00_12) ó (12-24).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapas_significativos__tiempo_actual_(fecha, ambito, dia, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha: Fecha de elaboración (AAAA-MM-DD) (required)
+        :param str ambito:  | Código | Ámbito | |----------|----------| | esp  | España| | and  | Andalucía   | | arn  | Aragón   | | ast  | Asturias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La (required)
+        :param str dia:  | Código de día | Día | |----------|----------| | a | D+0 (00-12)  | | b  | D+0 (00-12)   | |  c | D+1 (00-12)  | | d  | D+1 (12-24) | | e  | D+2 (00-12) | | f  | D+2 (12-24) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.mapas_significativos__tiempo_actual__with_http_info(fecha, ambito, dia, **kwargs)  # noqa: E501
+        else:
+            (data) = self.mapas_significativos__tiempo_actual__with_http_info(fecha, ambito, dia, **kwargs)  # noqa: E501
+            return data
+
+    def mapas_significativos__tiempo_actual__with_http_info(self, fecha, ambito, dia, **kwargs):  # noqa: E501
+        """Mapas significativos. Tiempo actual.  # noqa: E501
+
+        Mapas significativos de ámbito nacional o CCAA, para una fecha dada y ese mismo día (D+0),  al día siguiente (D+1) o a los dos días (D+2), en el periodo horario de (00_12) ó (12-24).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapas_significativos__tiempo_actual__with_http_info(fecha, ambito, dia, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha: Fecha de elaboración (AAAA-MM-DD) (required)
+        :param str ambito:  | Código | Ámbito | |----------|----------| | esp  | España| | and  | Andalucía   | | arn  | Aragón   | | ast  | Asturias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La (required)
+        :param str dia:  | Código de día | Día | |----------|----------| | a | D+0 (00-12)  | | b  | D+0 (00-12)   | |  c | D+1 (00-12)  | | d  | D+1 (12-24) | | e  | D+2 (00-12) | | f  | D+2 (12-24) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['fecha', 'ambito', 'dia']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method mapas_significativos__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `mapas_significativos__tiempo_actual_`")  # noqa: E501
+        # verify the required parameter 'ambito' is set
+        if ('ambito' not in params or
+                params['ambito'] is None):
+            raise ValueError("Missing the required parameter `ambito` when calling `mapas_significativos__tiempo_actual_`")  # noqa: E501
+        # verify the required parameter 'dia' is set
+        if ('dia' not in params or
+                params['dia'] is None):
+            raise ValueError("Missing the required parameter `dia` when calling `mapas_significativos__tiempo_actual_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+        if 'ambito' in params:
+            path_params['ambito'] = params['ambito']  # noqa: E501
+        if 'dia' in params:
+            path_params['dia'] = params['dia']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/mapasygraficos/mapassignificativos/fecha/{fecha}/{ambito}/{dia}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def mapas_significativos__tiempo_actual_1(self, ambito, dia, **kwargs):  # noqa: E501
+        """Mapas significativos. Tiempo actual.  # noqa: E501
+
+        Mapas significativos de ámbito nacional o CCAA, para el día actual (D+0),  al día siguiente (D+1) o a los dos días (D+2), en el periodo horario de (00_12) ó (12-24).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapas_significativos__tiempo_actual_1(ambito, dia, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ambito:  | Código | Ámbito | |----------|----------| | esp  | España| | and  | Andalucía   | | arn  | Aragón   | | ast  | Asturias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La (required)
+        :param str dia:  | Código de día | Día | |----------|----------| | a | D+0 (00-12)  | | b  | D+0 (00-12)   | |  c | D+1 (00-12)  | | d  | D+1 (12-24) | | e  | D+2 (00-12) | | f  | D+2 (12-24) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.mapas_significativos__tiempo_actual_1_with_http_info(ambito, dia, **kwargs)  # noqa: E501
+        else:
+            (data) = self.mapas_significativos__tiempo_actual_1_with_http_info(ambito, dia, **kwargs)  # noqa: E501
+            return data
+
+    def mapas_significativos__tiempo_actual_1_with_http_info(self, ambito, dia, **kwargs):  # noqa: E501
+        """Mapas significativos. Tiempo actual.  # noqa: E501
+
+        Mapas significativos de ámbito nacional o CCAA, para el día actual (D+0),  al día siguiente (D+1) o a los dos días (D+2), en el periodo horario de (00_12) ó (12-24).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapas_significativos__tiempo_actual_1_with_http_info(ambito, dia, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ambito:  | Código | Ámbito | |----------|----------| | esp  | España| | and  | Andalucía   | | arn  | Aragón   | | ast  | Asturias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La (required)
+        :param str dia:  | Código de día | Día | |----------|----------| | a | D+0 (00-12)  | | b  | D+0 (00-12)   | |  c | D+1 (00-12)  | | d  | D+1 (12-24) | | e  | D+2 (00-12) | | f  | D+2 (12-24) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['ambito', 'dia']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method mapas_significativos__tiempo_actual_1" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'ambito' is set
+        if ('ambito' not in params or
+                params['ambito'] is None):
+            raise ValueError("Missing the required parameter `ambito` when calling `mapas_significativos__tiempo_actual_1`")  # noqa: E501
+        # verify the required parameter 'dia' is set
+        if ('dia' not in params or
+                params['dia'] is None):
+            raise ValueError("Missing the required parameter `dia` when calling `mapas_significativos__tiempo_actual_1`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'ambito' in params:
+            path_params['ambito'] = params['ambito']  # noqa: E501
+        if 'dia' in params:
+            path_params['dia'] = params['dia']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/mapasygraficos/mapassignificativos/{ambito}/{dia}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
+
+
+class ObservacionConvencionalApi(object):
+    """NOTE: This class is auto generated by the swagger code generator program.
+
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
+
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
+
+    def datos_de_observacin__tiempo_actual_(self, **kwargs):  # noqa: E501
+        """Datos de observación. Tiempo actual.  # noqa: E501
+
+        Datos de observación horarios de las últimas 24 horas todas las estaciones meteorológicas de las que se han recibido datos en ese período. Frecuencia de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.datos_de_observacin__tiempo_actual_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.datos_de_observacin__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.datos_de_observacin__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def datos_de_observacin__tiempo_actual__with_http_info(self, **kwargs):  # noqa: E501
+        """Datos de observación. Tiempo actual.  # noqa: E501
+
+        Datos de observación horarios de las últimas 24 horas todas las estaciones meteorológicas de las que se han recibido datos en ese período. Frecuencia de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.datos_de_observacin__tiempo_actual__with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method datos_de_observacin__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/observacion/convencional/todas', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def datos_de_observacin__tiempo_actual_1(self, idema, **kwargs):  # noqa: E501
+        """Datos de observación. Tiempo actual.  # noqa: E501
+
+        Datos de observación horarios de las últimas 24 horas de la estación meterológica que se pasa como parámetro (idema). Frecuencia de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.datos_de_observacin__tiempo_actual_1(idema, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str idema: Índicativo climatológico de la EMA (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.datos_de_observacin__tiempo_actual_1_with_http_info(idema, **kwargs)  # noqa: E501
+        else:
+            (data) = self.datos_de_observacin__tiempo_actual_1_with_http_info(idema, **kwargs)  # noqa: E501
+            return data
+
+    def datos_de_observacin__tiempo_actual_1_with_http_info(self, idema, **kwargs):  # noqa: E501
+        """Datos de observación. Tiempo actual.  # noqa: E501
+
+        Datos de observación horarios de las últimas 24 horas de la estación meterológica que se pasa como parámetro (idema). Frecuencia de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.datos_de_observacin__tiempo_actual_1_with_http_info(idema, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str idema: Índicativo climatológico de la EMA (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['idema']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method datos_de_observacin__tiempo_actual_1" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'idema' is set
+        if ('idema' not in params or
+                params['idema'] is None):
+            raise ValueError("Missing the required parameter `idema` when calling `datos_de_observacin__tiempo_actual_1`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'idema' in params:
+            path_params['idema'] = params['idema']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/observacion/convencional/datos/estacion/{idema}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def mensajes_de_observacin__ltimo_elaborado_(self, tipomensaje, **kwargs):  # noqa: E501
+        """Mensajes de observación. Último elaborado.  # noqa: E501
+
+        Últimos mensajes de observación. Para los SYNOP y TEMP devuelve los mensajes de las últimas 24 horas y para los CLIMAT de los 40 últimos dias. Se pasa como parámetro el tipo de mensaje que se desea (tipomensaje). El resultado de la petición es un fichero en formato tar.gz, que contiene los boletines en formato json y bufr.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mensajes_de_observacin__ltimo_elaborado_(tipomensaje, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str tipomensaje:  | Código | Tipo de Mensaje | |----------|----------| | climat  | CLIMAT   | | synop  | SYNOP   | | temp  | TEMP   (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.mensajes_de_observacin__ltimo_elaborado__with_http_info(tipomensaje, **kwargs)  # noqa: E501
+        else:
+            (data) = self.mensajes_de_observacin__ltimo_elaborado__with_http_info(tipomensaje, **kwargs)  # noqa: E501
+            return data
+
+    def mensajes_de_observacin__ltimo_elaborado__with_http_info(self, tipomensaje, **kwargs):  # noqa: E501
+        """Mensajes de observación. Último elaborado.  # noqa: E501
+
+        Últimos mensajes de observación. Para los SYNOP y TEMP devuelve los mensajes de las últimas 24 horas y para los CLIMAT de los 40 últimos dias. Se pasa como parámetro el tipo de mensaje que se desea (tipomensaje). El resultado de la petición es un fichero en formato tar.gz, que contiene los boletines en formato json y bufr.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mensajes_de_observacin__ltimo_elaborado__with_http_info(tipomensaje, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str tipomensaje:  | Código | Tipo de Mensaje | |----------|----------| | climat  | CLIMAT   | | synop  | SYNOP   | | temp  | TEMP   (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['tipomensaje']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method mensajes_de_observacin__ltimo_elaborado_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'tipomensaje' is set
+        if ('tipomensaje' not in params or
+                params['tipomensaje'] is None):
+            raise ValueError("Missing the required parameter `tipomensaje` when calling `mensajes_de_observacin__ltimo_elaborado_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'tipomensaje' in params:
+            path_params['tipomensaje'] = params['tipomensaje']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/observacion/convencional/mensajes/tipomensaje/{tipomensaje}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
 
 
 class PrediccionMaritimaApi(object):
-    """Predicción marítima."""
+    """NOTE: This class is auto generated by the swagger code generator program.
 
-    def __init__(self):
-        """Initialize."""
-        self._aemetClient = aemetClient
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
 
-    async def prediccin_martima_costera_(self, costa):
-        """Predicción marítima costera.
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
 
-        Predicción para un periodo de 24 horas de las condiciones
-        meteorológicas para la zona costera pasada por parámetro.
+    def prediccin_martima_costera_(self, costa, **kwargs):  # noqa: E501
+        """Predicción marítima costera.  # noqa: E501
 
-        :param str costa: Área Costera
-                            42 -> Costa de Andalucía Occidental y Ceuta
-                            47 -> Costa de Andalucía Oriental y Melilla
-                            41 -> Costa de Asturias, Cantabria y País Vasco
-                            45 -> Costa de Cataluña
-                            40 -> Costa de Galicia
-                            44 -> Costa de Illes Balears
-                            43 -> Costa de las Islas Canarias
-                            46 -> Costa de Valencia y Murcia
+        Predicción para un periodo de 24 horas de las condiciones meteorológicas para la zona costera pasada por parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_martima_costera_(costa, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str costa:  | Código | Área Costera | |----------|----------| | 42 | Costa de Andalucía Occidental y Ceuta   | | 47  | Costa de Andalucía Oriental y Melilla   | | 41  | Costa de Asturias, Cantabria y País Vasco  | | 45  | Costa de Cataluña   | | 40  | Costa de Galicia   | | 44  | Costa de Illes Balears   | | 43  | Costa de las Islas Canarias  | | 46  | Costa de Valencia y Murcia (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/maritima/costera/costa/" + costa
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_martima_costera__with_http_info(costa, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_martima_costera__with_http_info(costa, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_martima_de_alta_mar_(self, area):
-        """Predicción marítima de alta mar.
+    def prediccin_martima_costera__with_http_info(self, costa, **kwargs):  # noqa: E501
+        """Predicción marítima costera.  # noqa: E501
 
-        Predicción para un periodo de 24 horas de las condiciones
-        meteorológicas para el área marítima pasada por parámetro.
+        Predicción para un periodo de 24 horas de las condiciones meteorológicas para la zona costera pasada por parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_martima_costera__with_http_info(costa, async_req=True)
+        >>> result = thread.get()
 
-        :param str area:  Área de Alta Mar
-                                0 -> Océano Atlántico al sur de 35º N
-                                1 -> Océano Atlántico al norte de 30º N
-                                2 -> Mar Mediterráneo
+        :param async_req bool
+        :param str costa:  | Código | Área Costera | |----------|----------| | 42 | Costa de Andalucía Occidental y Ceuta   | | 47  | Costa de Andalucía Oriental y Melilla   | | 41  | Costa de Asturias, Cantabria y País Vasco  | | 45  | Costa de Cataluña   | | 40  | Costa de Galicia   | | 44  | Costa de Illes Balears   | | 43  | Costa de las Islas Canarias  | | 46  | Costa de Valencia y Murcia (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/maritima/altamar/area/" + area
-        )
+
+        all_params = ['costa']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_martima_costera_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'costa' is set
+        if ('costa' not in params or
+                params['costa'] is None):
+            raise ValueError("Missing the required parameter `costa` when calling `prediccin_martima_costera_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'costa' in params:
+            path_params['costa'] = params['costa']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/maritima/costera/costa/{costa}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_martima_de_alta_mar_(self, area, **kwargs):  # noqa: E501
+        """Predicción marítima de alta mar.  # noqa: E501
+
+        Predicción para un periodo de 24 horas de las condiciones meteorológicas para el área marítima pasada por parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_martima_de_alta_mar_(area, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str area:  | Código | Área de Alta Mar | |----------|----------| | 0 | Océano Atlántico al sur de 35º N   | | 1  | Océano Atlántico al norte de 30º N   | | 2  | Mar Mediterráneo (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_martima_de_alta_mar__with_http_info(area, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_martima_de_alta_mar__with_http_info(area, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_martima_de_alta_mar__with_http_info(self, area, **kwargs):  # noqa: E501
+        """Predicción marítima de alta mar.  # noqa: E501
+
+        Predicción para un periodo de 24 horas de las condiciones meteorológicas para el área marítima pasada por parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_martima_de_alta_mar__with_http_info(area, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str area:  | Código | Área de Alta Mar | |----------|----------| | 0 | Océano Atlántico al sur de 35º N   | | 1  | Océano Atlántico al norte de 30º N   | | 2  | Mar Mediterráneo (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['area']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_martima_de_alta_mar_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'area' is set
+        if ('area' not in params or
+                params['area'] is None):
+            raise ValueError("Missing the required parameter `area` when calling `prediccin_martima_de_alta_mar_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'area' in params:
+            path_params['area'] = params['area']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/maritima/altamar/area/{area}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
 
 
 class PrediccionesEspecificasApi(object):
-    """Información nivológica para la zona montañosa."""
+    """NOTE: This class is auto generated by the swagger code generator program.
 
-    def __init__(self):
-        """Initialize."""
-        self._aemetClient = aemetClient
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
 
-    async def informacion_nivologica_(self, area):
-        """Información nivológica.
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
 
-        Información nivológica para la zona montañosa que se pasa
-        como parámetro (area).
+    def informacion_nivologica_(self, area, **kwargs):  # noqa: E501
+        """Información nivológica.  # noqa: E501
 
-        :param str area:  Código de Área Montañosa
-                                0 -> Pirineo Catalán
-                                1 -> Pirineo Navarro y Aragonés
+        Información nivológica para la zona montañosa que se pasa como parámetro (area).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.informacion_nivologica_(area, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str area:  | Código de  Área Montañosa |  Área Montañosa | |----------|----------| | 0 | Pirineo Catalán  | | 1  | Pirineo Navarro y Aragonés (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/especifica/nivologica/" + area
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.informacion_nivologica__with_http_info(area, **kwargs)  # noqa: E501
+        else:
+            (data) = self.informacion_nivologica__with_http_info(area, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_de_montaa__tiempo_actual_(self, area, dia):
-        """Predicción de montaña. Tiempo actual.
+    def informacion_nivologica__with_http_info(self, area, **kwargs):  # noqa: E501
+        """Información nivológica.  # noqa: E501
 
-        Predicción meteorológica para la zona montañosa que se pasa
-        como parámetro (area) con validez para el día (día).
-        Periodicidad de actualización: continuamente.
+        Información nivológica para la zona montañosa que se pasa como parámetro (area).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.informacion_nivologica__with_http_info(area, async_req=True)
+        >>> result = thread.get()
 
-        :param str area: Código de Área Montañosa
-                            peu1 -> Picos de Europa
-                            nav1 -> Pirineo Navarro
-                            arn1 -> Pirineo Aragonés
-                            cat1 -> Pirineo Catalán
-                            rio1 -> Ibérica Riojana
-                            arn2 -> Ibérica Aragonesa
-                            mad2 -> Sierras de Guadarrama y Somosierra
-                            gre1 -> Sierra de Gredos
-                            nev1 -> Sierra Nevada
-        :param str dia: Código de día
-                            0 -> día actual
-                            1 -> d+1 (mañana)
-                            2 -> d+2 (pasado mañana)
-                            3 -> d+3 (siguente a pasado mañana)
+        :param async_req bool
+        :param str area:  | Código de  Área Montañosa |  Área Montañosa | |----------|----------| | 0 | Pirineo Catalán  | | 1  | Pirineo Navarro y Aragonés (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/especifica/montaña/pasada/area/" + area + "/dia/" + dia
-        )
 
-    async def prediccin_de_montaa__tiempo_pasado_(self, area):
-        """Predicción de montaña. Tiempo pasado.
+        all_params = ['area']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Breve resumen con lo más significativo de las condiciones
-        meteorológicas registradas en la zona de montaña que se pasa como
-        parámetro (area) en las últimas 24-36 horas.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method informacion_nivologica_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'area' is set
+        if ('area' not in params or
+                params['area'] is None):
+            raise ValueError("Missing the required parameter `area` when calling `informacion_nivologica_`")  # noqa: E501
 
-        :param str area: Código de Área Montañosa
-                            peu1 -> Picos de Europa
-                            nav1 -> Pirineo Navarro
-                            arn1 -> Pirineo Aragonés
-                            cat1 -> Pirineo Catalán
-                            rio1 -> Ibérica Riojana
-                            arn2 -> Ibérica Aragonesa
-                            mad2 -> Sierras de Guadarrama y Somosierra
-                            gre1 -> Sierra de Gredos
-                            nev1 -> Sierra Nevada
+        collection_formats = {}
+
+        path_params = {}
+        if 'area' in params:
+            path_params['area'] = params['area']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/especifica/nivologica/{area}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_de_montaa__tiempo_actual_(self, area, dia, **kwargs):  # noqa: E501
+        """Predicción de montaña. Tiempo actual.  # noqa: E501
+
+        Predicción meteorológica para la zona montañosa que se pasa como parámetro (area) con validez para el día (día).  Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_de_montaa__tiempo_actual_(area, dia, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str area:  | Código de Área Montañosa | Área Montañosa | |----------|----------| | peu1 | Picos de Europa   | | nav1  | Pirineo Navarro   | | arn1  | Pirineo Aragonés  | | cat1  | Pirineo Catalán   | | rio1  | Ibérica Riojana   | | arn2  | Ibérica Aragonesa   | | mad2  | Sierras de Guadarrama y Somosierra  | | gre1  | Sierra de Gredos   | | nev1  | Sierra Nevada (required)
+        :param str dia:  | Código de día | Día | |----------|----------| | 0 | día actual  | | 1  | d+1 (mañana)   | | 2  | d+2 (pasado mañana)  | | 3  | d+3 (siguente a pasado mañana) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/especifica/montaña/pasada/area/" + area
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_de_montaa__tiempo_actual__with_http_info(area, dia, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_de_montaa__tiempo_actual__with_http_info(area, dia, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_de_radiacin_ultravioleta__uvi_(self, dia):
-        """Predicción de radiación ultravioleta (UVI).
+    def prediccin_de_montaa__tiempo_actual__with_http_info(self, area, dia, **kwargs):  # noqa: E501
+        """Predicción de montaña. Tiempo actual.  # noqa: E501
 
-        Predicción de Índice de radiación UV máximo en condiciones
-        de cielo despejado para el día seleccionado.
+        Predicción meteorológica para la zona montañosa que se pasa como parámetro (area) con validez para el día (día).  Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_de_montaa__tiempo_actual__with_http_info(area, dia, async_req=True)
+        >>> result = thread.get()
 
-        :param str dia: Código de día
-                            0 -> día actual
-                            1 -> d+1 (mañana)
-                            2 -> d+2 (pasado mañana)
-                            3 -> d+3 (dentro de 3 días)
-                            4 -> d+4 (dentro de 4 días)
+        :param async_req bool
+        :param str area:  | Código de Área Montañosa | Área Montañosa | |----------|----------| | peu1 | Picos de Europa   | | nav1  | Pirineo Navarro   | | arn1  | Pirineo Aragonés  | | cat1  | Pirineo Catalán   | | rio1  | Ibérica Riojana   | | arn2  | Ibérica Aragonesa   | | mad2  | Sierras de Guadarrama y Somosierra  | | gre1  | Sierra de Gredos   | | nev1  | Sierra Nevada (required)
+        :param str dia:  | Código de día | Día | |----------|----------| | 0 | día actual  | | 1  | d+1 (mañana)   | | 2  | d+2 (pasado mañana)  | | 3  | d+3 (siguente a pasado mañana) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/especifica/uvi/" + dia)
 
-    async def prediccin_para_las_playas__tiempo_actual_(self, playa):
-        """Predicción para las playas. Tiempo actual.
+        all_params = ['area', 'dia']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        La predicción diaria de la playa que se pasa como parámetro.
-        Establece el estado de nubosidad para unas horas determinadas,
-        las 11 y las 17 hora oficial. Se analiza también si se espera
-        precipitación en el entorno de esas horas,
-        entre las 08 y las 14 horas y entre las 14 y 20 horas.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_de_montaa__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'area' is set
+        if ('area' not in params or
+                params['area'] is None):
+            raise ValueError("Missing the required parameter `area` when calling `prediccin_de_montaa__tiempo_actual_`")  # noqa: E501
+        # verify the required parameter 'dia' is set
+        if ('dia' not in params or
+                params['dia'] is None):
+            raise ValueError("Missing the required parameter `dia` when calling `prediccin_de_montaa__tiempo_actual_`")  # noqa: E501
 
-        :param str playa: Código de playa
-                                http://www.aemet.es/documentos/es/eltiempo/prediccion/playas/Playas_codigos.csv
+        collection_formats = {}
+
+        path_params = {}
+        if 'area' in params:
+            path_params['area'] = params['area']  # noqa: E501
+        if 'dia' in params:
+            path_params['dia'] = params['dia']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/especifica/montaña/pasada/area/{area}/dia/{dia}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_de_montaa__tiempo_pasado_(self, area, **kwargs):  # noqa: E501
+        """Predicción de montaña. Tiempo pasado.  # noqa: E501
+
+        Breve resumen con lo más significativo de las condiciones meteorológicas registradas en la zona de montaña que se pasa como parámetro (area) en las últimas 24-36 horas.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_de_montaa__tiempo_pasado_(area, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str area:  | Código de Área Montañosa | Área Montañosa | |----------|----------| | peu1 | Picos de Europa   | | nav1  | Pirineo Navarro   | | arn1  | Pirineo Aragonés  | | cat1  | Pirineo Catalán   | | rio1  | Ibérica Riojana   | | arn2  | Ibérica Aragonesa   | | mad2  | Sierras de Guadarrama y Somosierra  | | gre1  | Sierra de Gredos   | | nev1  | Sierra Nevada (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/especifica/playa/" + playa)
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_de_montaa__tiempo_pasado__with_http_info(area, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_de_montaa__tiempo_pasado__with_http_info(area, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_por_municipios_diaria__tiempo_actual_(self, municipio):
-        """Predicción por municipios diaria. Tiempo actual.
+    def prediccin_de_montaa__tiempo_pasado__with_http_info(self, area, **kwargs):  # noqa: E501
+        """Predicción de montaña. Tiempo pasado.  # noqa: E501
 
-        Predicción para el municipio que se pasa como parámetro (municipio).
-        Periodicidad de actualización: continuamente.
+        Breve resumen con lo más significativo de las condiciones meteorológicas registradas en la zona de montaña que se pasa como parámetro (area) en las últimas 24-36 horas.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_de_montaa__tiempo_pasado__with_http_info(area, async_req=True)
+        >>> result = thread.get()
 
-        :param str municipio: Código de municipio
-                                    http://www.ine.es/daco/daco42/codmun/codmunmapa.htm
+        :param async_req bool
+        :param str area:  | Código de Área Montañosa | Área Montañosa | |----------|----------| | peu1 | Picos de Europa   | | nav1  | Pirineo Navarro   | | arn1  | Pirineo Aragonés  | | cat1  | Pirineo Catalán   | | rio1  | Ibérica Riojana   | | arn2  | Ibérica Aragonesa   | | mad2  | Sierras de Guadarrama y Somosierra  | | gre1  | Sierra de Gredos   | | nev1  | Sierra Nevada (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/especifica/municipio/diaria/" + municipio
-        )
 
-    async def prediccin_por_municipios_horaria__tiempo_actual_(self, municipio):
-        """Predicción por municipios horaria. Tiempo actual.
+        all_params = ['area']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Predicción horaria para el municipio que se pasa como parámetro
-        (municipio). Presenta la información de hora en hora hasta 48 horas.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_de_montaa__tiempo_pasado_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'area' is set
+        if ('area' not in params or
+                params['area'] is None):
+            raise ValueError("Missing the required parameter `area` when calling `prediccin_de_montaa__tiempo_pasado_`")  # noqa: E501
 
-        :param str municipio: Código de municipio
-                                    http://www.ine.es/daco/daco42/codmun/codmunmapa.htm
+        collection_formats = {}
+
+        path_params = {}
+        if 'area' in params:
+            path_params['area'] = params['area']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/especifica/montaña/pasada/area/{area}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_de_radiacin_ultravioleta__uvi_(self, dia, **kwargs):  # noqa: E501
+        """Predicción de radiación ultravioleta (UVI).  # noqa: E501
+
+         Predicción de Índice de radiación UV máximo en condiciones de cielo despejado para el día seleccionado.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_de_radiacin_ultravioleta__uvi_(dia, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str dia:  | Código de día | Día | |----------|----------| | 0 | día actual  | | 1  | d+1 (mañana)   | | 2  | d+2 (pasado mañana)  | | 3  | d+3 (dentro de 3 días) | | 4  | d+4 (dentro de 4 días) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/especifica/municipio/horaria/" + municipio
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_de_radiacin_ultravioleta__uvi__with_http_info(dia, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_de_radiacin_ultravioleta__uvi__with_http_info(dia, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_de_radiacin_ultravioleta__uvi__with_http_info(self, dia, **kwargs):  # noqa: E501
+        """Predicción de radiación ultravioleta (UVI).  # noqa: E501
+
+         Predicción de Índice de radiación UV máximo en condiciones de cielo despejado para el día seleccionado.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_de_radiacin_ultravioleta__uvi__with_http_info(dia, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str dia:  | Código de día | Día | |----------|----------| | 0 | día actual  | | 1  | d+1 (mañana)   | | 2  | d+2 (pasado mañana)  | | 3  | d+3 (dentro de 3 días) | | 4  | d+4 (dentro de 4 días) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['dia']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_de_radiacin_ultravioleta__uvi_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'dia' is set
+        if ('dia' not in params or
+                params['dia'] is None):
+            raise ValueError("Missing the required parameter `dia` when calling `prediccin_de_radiacin_ultravioleta__uvi_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'dia' in params:
+            path_params['dia'] = params['dia']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/especifica/uvi/{dia}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_para_las_playas__tiempo_actual_(self, playa, **kwargs):  # noqa: E501
+        """Predicción para las playas. Tiempo actual.  # noqa: E501
+
+        La predicción diaria de la playa que se pasa como parámetro. Establece el estado de nubosidad para unas horas determinadas, las 11 y las 17 hora oficial. Se analiza también si se espera precipitación en el entorno de esas horas, entre las 08 y las 14 horas y entre las 14 y 20 horas.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_para_las_playas__tiempo_actual_(playa, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str playa: Código de playa   http://www.aemet.es/documentos/es/eltiempo/prediccion/playas/Playas_codigos.csv (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_para_las_playas__tiempo_actual__with_http_info(playa, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_para_las_playas__tiempo_actual__with_http_info(playa, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_para_las_playas__tiempo_actual__with_http_info(self, playa, **kwargs):  # noqa: E501
+        """Predicción para las playas. Tiempo actual.  # noqa: E501
+
+        La predicción diaria de la playa que se pasa como parámetro. Establece el estado de nubosidad para unas horas determinadas, las 11 y las 17 hora oficial. Se analiza también si se espera precipitación en el entorno de esas horas, entre las 08 y las 14 horas y entre las 14 y 20 horas.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_para_las_playas__tiempo_actual__with_http_info(playa, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str playa: Código de playa   http://www.aemet.es/documentos/es/eltiempo/prediccion/playas/Playas_codigos.csv (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['playa']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_para_las_playas__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'playa' is set
+        if ('playa' not in params or
+                params['playa'] is None):
+            raise ValueError("Missing the required parameter `playa` when calling `prediccin_para_las_playas__tiempo_actual_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'playa' in params:
+            path_params['playa'] = params['playa']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/especifica/playa/{playa}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_por_municipios_diaria__tiempo_actual_(self, municipio, **kwargs):  # noqa: E501
+        """Predicción por municipios diaria. Tiempo actual.  # noqa: E501
+
+        Predicción para el municipio que se pasa como parámetro (municipio). Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_por_municipios_diaria__tiempo_actual_(municipio, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str municipio: Código de municipio   http://www.ine.es/daco/daco42/codmun/codmunmapa.htm (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_por_municipios_diaria__tiempo_actual__with_http_info(municipio, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_por_municipios_diaria__tiempo_actual__with_http_info(municipio, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_por_municipios_diaria__tiempo_actual__with_http_info(self, municipio, **kwargs):  # noqa: E501
+        """Predicción por municipios diaria. Tiempo actual.  # noqa: E501
+
+        Predicción para el municipio que se pasa como parámetro (municipio). Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_por_municipios_diaria__tiempo_actual__with_http_info(municipio, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str municipio: Código de municipio   http://www.ine.es/daco/daco42/codmun/codmunmapa.htm (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['municipio']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_por_municipios_diaria__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'municipio' is set
+        if ('municipio' not in params or
+                params['municipio'] is None):
+            raise ValueError("Missing the required parameter `municipio` when calling `prediccin_por_municipios_diaria__tiempo_actual_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'municipio' in params:
+            path_params['municipio'] = params['municipio']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/especifica/municipio/diaria/{municipio}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_por_municipios_horaria__tiempo_actual_(self, municipio, **kwargs):  # noqa: E501
+        """Predicción por municipios horaria. Tiempo actual.  # noqa: E501
+
+        Predicción horaria para el municipio que se pasa como parámetro (municipio). Presenta la información de hora en hora hasta 48 horas.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_por_municipios_horaria__tiempo_actual_(municipio, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str municipio: Código de municipio  http://www.ine.es/daco/daco42/codmun/codmunmapa.htm (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_por_municipios_horaria__tiempo_actual__with_http_info(municipio, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_por_municipios_horaria__tiempo_actual__with_http_info(municipio, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_por_municipios_horaria__tiempo_actual__with_http_info(self, municipio, **kwargs):  # noqa: E501
+        """Predicción por municipios horaria. Tiempo actual.  # noqa: E501
+
+        Predicción horaria para el municipio que se pasa como parámetro (municipio). Presenta la información de hora en hora hasta 48 horas.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_por_municipios_horaria__tiempo_actual__with_http_info(municipio, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str municipio: Código de municipio  http://www.ine.es/daco/daco42/codmun/codmunmapa.htm (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['municipio']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_por_municipios_horaria__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'municipio' is set
+        if ('municipio' not in params or
+                params['municipio'] is None):
+            raise ValueError("Missing the required parameter `municipio` when calling `prediccin_por_municipios_horaria__tiempo_actual_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'municipio' in params:
+            path_params['municipio'] = params['municipio']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/especifica/municipio/horaria/{municipio}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
 
 
 class PrediccionesNormalizadasTextoApi(object):
-    """Predicción normalizadas."""
+    """NOTE: This class is auto generated by the swagger code generator program.
 
-    def __init__(self):
-        """Initialize."""
-        self._aemetClient = aemetClient
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
 
-    async def prediccin_ccaa_hoy__archivo_(self, ccaa, fecha):
-        """Predicción CCAA hoy. Archivo.
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
 
-        Predicción para la comunidad autónoma que se pasa como parámetro
-        (ccaa) con validez para el día de fecha de elaboración que se
-        pasa como parámetro (fecha).
-        Periodicidad de actualización: continuamente.
+    def prediccin_ccaa_hoy__archivo_(self, ccaa, fecha, **kwargs):  # noqa: E501
+        """Predicción CCAA hoy. Archivo.  # noqa: E501
 
-        :param str ccaa: Código de CCAA
-                                and -> Andalucía
-                                arn -> Aragón
-                                ast -> Astrrias
-                                bal -> Ballears, Illes
-                                coo -> Canarias
-                                can -> Cantabria
-                                cle -> Castilla y León
-                                clm -> Castilla - La Mancha
-                                cat -> Cataluña
-                                val -> Comunitat Valenciana
-                                ext -> Extremadura
-                                gal -> Galicia
-                                mad -> Madrid, Comunidad de
-                                mur -> Murcia, Región de
-                                nav -> Navarra, Comunidad Foral de
-                                pva -> País Vasco
-                                rio -> Rioja, La
-        :param str fecha: Día de elaboración (AAAA-MM-DD)
+        Predicción para la comunidad autónoma que se pasa como parámetro (ccaa) con validez para el día de fecha de elaboración que se pasa como parámetro (fecha). Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_hoy__archivo_(ccaa, fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/ccaa/hoy/" + ccaa + "/elaboracion/" + fecha
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_ccaa_hoy__archivo__with_http_info(ccaa, fecha, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_ccaa_hoy__archivo__with_http_info(ccaa, fecha, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_ccaa_hoy__tiempo_actual_(self, ccaa):
-        """Predicción CCAA hoy. Tiempo actual.
+    def prediccin_ccaa_hoy__archivo__with_http_info(self, ccaa, fecha, **kwargs):  # noqa: E501
+        """Predicción CCAA hoy. Archivo.  # noqa: E501
 
-        Predicción para la CCAA que se pasa como parámetro con validez
-        para mismo día que la fecha de petición. En el caso de que en la
-        fecha de petición este producto todavía no se hubiera elaborado,
-        se retornará el último elaborado. Actualización continuamente.
+        Predicción para la comunidad autónoma que se pasa como parámetro (ccaa) con validez para el día de fecha de elaboración que se pasa como parámetro (fecha). Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_hoy__archivo__with_http_info(ccaa, fecha, async_req=True)
+        >>> result = thread.get()
 
-        :param str ccaa: Código de CCAA
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/ccaa/hoy/" + ccaa)
 
-    async def prediccin_ccaa_maana__archivo_(self, ccaa, fecha):
-        """Predicción CCAA mañana. Archivo.
+        all_params = ['ccaa', 'fecha']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Predicción para la comunidad autónoma que se pasa como parámetro
-        (ccaa) con validez para el día siguiente a la fecha de elaboración
-        que se pasa como parámetro (fecha).
-        Periodicidad de actualización. continuamente.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_ccaa_hoy__archivo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'ccaa' is set
+        if ('ccaa' not in params or
+                params['ccaa'] is None):
+            raise ValueError("Missing the required parameter `ccaa` when calling `prediccin_ccaa_hoy__archivo_`")  # noqa: E501
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `prediccin_ccaa_hoy__archivo_`")  # noqa: E501
 
-        :param str ccaa: Código de CCAA
-        :param str fecha: Día de elaboración (AAAA-MM-DD)
+        collection_formats = {}
+
+        path_params = {}
+        if 'ccaa' in params:
+            path_params['ccaa'] = params['ccaa']  # noqa: E501
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/ccaa/hoy/{ccaa}/elaboracion/{fecha}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_ccaa_hoy__tiempo_actual_(self, ccaa, **kwargs):  # noqa: E501
+        """Predicción CCAA hoy. Tiempo actual.  # noqa: E501
+
+        Predicción para la CCAA que se pasa como parámetro con validez para mismo día que la fecha de petición. En el caso de que en la fecha de petición este producto todavía no se hubiera elaborado, se retornará el último elaborado. Actualización continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_hoy__tiempo_actual_(ccaa, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Asturias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/ccaa/manana/" + ccaa + "/elaboracion/" + fecha
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_ccaa_hoy__tiempo_actual__with_http_info(ccaa, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_ccaa_hoy__tiempo_actual__with_http_info(ccaa, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_ccaa_maana__tiempo_actual_(self, ccaa):
-        """Predicción CCAA mañana. Tiempo actual.
+    def prediccin_ccaa_hoy__tiempo_actual__with_http_info(self, ccaa, **kwargs):  # noqa: E501
+        """Predicción CCAA hoy. Tiempo actual.  # noqa: E501
 
-        Predicción para la comunidad autónoma que se pasa como parámetro
-        para el día siguiente a la fecha de la petición.
-        En el caso de el producto no se hubiera elaborado todavía en
-        la fecha de petición se retornará el último producto elaborado.
-        Periodicidad de actualización: continuamente.
+        Predicción para la CCAA que se pasa como parámetro con validez para mismo día que la fecha de petición. En el caso de que en la fecha de petición este producto todavía no se hubiera elaborado, se retornará el último elaborado. Actualización continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_hoy__tiempo_actual__with_http_info(ccaa, async_req=True)
+        >>> result = thread.get()
 
-        :param str ccaa: Código de CCAA
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Asturias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/ccaa/manana/" + ccaa)
 
-    async def prediccin_ccaa_medio_plazo__archivo_(self, ccaa, fecha):
-        """Predicción CCAA medio plazo. Archivo.
+        all_params = ['ccaa']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Predicción de mediio plazo para la comunidad autónoma que se pasa
-        como parámetro (ccaa) a partir de la fecha de elaboración que se
-        pasa como parámetro (fecha).
-        Periodicidad de actualización: continuamente.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_ccaa_hoy__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'ccaa' is set
+        if ('ccaa' not in params or
+                params['ccaa'] is None):
+            raise ValueError("Missing the required parameter `ccaa` when calling `prediccin_ccaa_hoy__tiempo_actual_`")  # noqa: E501
 
-        :param str ccaa: Código de CCAA
-        :param str fecha: Día de elaboración (AAAA-MM-DD)
+        collection_formats = {}
+
+        path_params = {}
+        if 'ccaa' in params:
+            path_params['ccaa'] = params['ccaa']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/ccaa/hoy/{ccaa}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_ccaa_maana__archivo_(self, ccaa, fecha, **kwargs):  # noqa: E501
+        """Predicción CCAA mañana. Archivo.  # noqa: E501
+
+        Predicción para la comunidad autónoma que se pasa como parámetro (ccaa) con validez para el día siguiente a la fecha de elaboración que se pasa como parámetro (fecha). Periodicidad de actualización. continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_maana__archivo_(ccaa, fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/ccaa/medioplazo/" + ccaa + "/elaboracion/" + fecha
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_ccaa_maana__archivo__with_http_info(ccaa, fecha, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_ccaa_maana__archivo__with_http_info(ccaa, fecha, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_ccaa_medio_plazo__tiempo_actual_(self, ccaa):
-        """Predicción CCAA medio plazo. Tiempo actual.
+    def prediccin_ccaa_maana__archivo__with_http_info(self, ccaa, fecha, **kwargs):  # noqa: E501
+        """Predicción CCAA mañana. Archivo.  # noqa: E501
 
-        Predicción para la comunidad autónoma que se pasa como parámetro
-        (ccaa) y con validez para el medio plazo a partir de la fecha de
-        petición. En el caso de que en el fecha de la petición no se
-        hubiera generado aún el producto, se retornará el última elaborado.
-        Periodicidad de actualización: continuamente.
+        Predicción para la comunidad autónoma que se pasa como parámetro (ccaa) con validez para el día siguiente a la fecha de elaboración que se pasa como parámetro (fecha). Periodicidad de actualización. continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_maana__archivo__with_http_info(ccaa, fecha, async_req=True)
+        >>> result = thread.get()
 
-        :param str ccaa: Código de CCAA
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/ccaa/medioplazo/" + ccaa)
 
-    async def prediccin_ccaa_pasado_maana__archivo_(self, ccaa, fecha):
-        """Predicción CCAA pasado mañana. Archivo.
+        all_params = ['ccaa', 'fecha']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Predicción para la comunidad autónoma que se pasa como parámetro
-        (ccaa) y validez para pasado mañana a partir de la fecha de
-        elaboración que se pasa como parámetro (fecha).
-        Periodicidad de actualización: continuamente.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_ccaa_maana__archivo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'ccaa' is set
+        if ('ccaa' not in params or
+                params['ccaa'] is None):
+            raise ValueError("Missing the required parameter `ccaa` when calling `prediccin_ccaa_maana__archivo_`")  # noqa: E501
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `prediccin_ccaa_maana__archivo_`")  # noqa: E501
 
-        :param str ccaa: Código de CCAA
-        :param str fecha: Día de elaboración (AAAA-MM-DD)
+        collection_formats = {}
+
+        path_params = {}
+        if 'ccaa' in params:
+            path_params['ccaa'] = params['ccaa']  # noqa: E501
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/ccaa/manana/{ccaa}/elaboracion/{fecha}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_ccaa_maana__tiempo_actual_(self, ccaa, **kwargs):  # noqa: E501
+        """Predicción CCAA mañana. Tiempo actual.  # noqa: E501
+
+        Predicción para la comunidad autónoma que se pasa como parámetro para el día siguiente a la fecha de la petición. En el caso de el producto no se hubiera elaborado todavía en la fecha de petición se retornará el último producto elaborado. Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_maana__tiempo_actual_(ccaa, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/ccaa/pasadomanana/" + ccaa + "/elaboracion/" + fecha
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_ccaa_maana__tiempo_actual__with_http_info(ccaa, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_ccaa_maana__tiempo_actual__with_http_info(ccaa, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_ccaa_pasado_maana__tiempo_actual_(self, ccaa):
-        """Predicción CCAA pasado mañana. Tiempo actual.
+    def prediccin_ccaa_maana__tiempo_actual__with_http_info(self, ccaa, **kwargs):  # noqa: E501
+        """Predicción CCAA mañana. Tiempo actual.  # noqa: E501
 
-        Predicción para la comunidad autónoma que se pasa como parámetro
-        (ccaa) y validez para el medio plazo a partir de la fecha de
-        la petición. En el caso de que en la fecha de la petición dicho
-        producto aún no se hubiera generado retornará el último de este
-        tipo que se hubiera generado.
-        Periodicidad de actualización: continuamente.
+        Predicción para la comunidad autónoma que se pasa como parámetro para el día siguiente a la fecha de la petición. En el caso de el producto no se hubiera elaborado todavía en la fecha de petición se retornará el último producto elaborado. Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_maana__tiempo_actual__with_http_info(ccaa, async_req=True)
+        >>> result = thread.get()
 
-        :param str ccaa:  | Código de CCAA
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/ccaa/pasadomanana/" + ccaa)
 
-    async def prediccin_nacional_hoy__archivo_(self, fecha):
-        """Predicción nacional hoy. Archivo.
+        all_params = ['ccaa']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Predicción nacional para el día correspondiente a la fecha que se
-        pasa como parámetro en en formato texto. Actualización diaria.
-        Hay días en los que este producto no se realiza.
-        En ese caso se devuelve un 404 producto no existente.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_ccaa_maana__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'ccaa' is set
+        if ('ccaa' not in params or
+                params['ccaa'] is None):
+            raise ValueError("Missing the required parameter `ccaa` when calling `prediccin_ccaa_maana__tiempo_actual_`")  # noqa: E501
 
-        :param str fecha: Fecha en formato (AAAA-MM-DD)
+        collection_formats = {}
+
+        path_params = {}
+        if 'ccaa' in params:
+            path_params['ccaa'] = params['ccaa']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/ccaa/manana/{ccaa}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_ccaa_medio_plazo__archivo_(self, ccaa, fecha, **kwargs):  # noqa: E501
+        """Predicción CCAA medio plazo. Archivo.  # noqa: E501
+
+        Predicción de mediio plazo para la comunidad autónoma que se pasa como parámetro (ccaa) a partir de la fecha de elaboración que se pasa como parámetro (fecha). Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_medio_plazo__archivo_(ccaa, fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/nacional/hoy/elaboracion/" + fecha
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_ccaa_medio_plazo__archivo__with_http_info(ccaa, fecha, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_ccaa_medio_plazo__archivo__with_http_info(ccaa, fecha, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_nacional_hoy__tiempo_actual_(self):
-        """Predicción nacional hoy. Última elaborada.
+    def prediccin_ccaa_medio_plazo__archivo__with_http_info(self, ccaa, fecha, **kwargs):  # noqa: E501
+        """Predicción CCAA medio plazo. Archivo.  # noqa: E501
 
-        Predicción nacional para el día actual a la fecha de elaboración
-        en formato texto. Actualización diaria. Hay días en los que este
-        producto no se realiza. En ese caso se devuelve la predicción
-        nacional última que se elaboró.
+        Predicción de mediio plazo para la comunidad autónoma que se pasa como parámetro (ccaa) a partir de la fecha de elaboración que se pasa como parámetro (fecha). Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_medio_plazo__archivo__with_http_info(ccaa, fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/nacional/hoy")
 
-    async def prediccin_nacional_maana__archivo_(self, fecha):
-        """Predicción nacional mañana. Archivo.
+        all_params = ['ccaa', 'fecha']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Predicción nacional para el día siguiente a la fecha de
-        elaboración. En este caso la fecha de elaboración es la fecha que
-        se pasa como parámetro. Actualización diaria.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_ccaa_medio_plazo__archivo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'ccaa' is set
+        if ('ccaa' not in params or
+                params['ccaa'] is None):
+            raise ValueError("Missing the required parameter `ccaa` when calling `prediccin_ccaa_medio_plazo__archivo_`")  # noqa: E501
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `prediccin_ccaa_medio_plazo__archivo_`")  # noqa: E501
 
-        :param str fecha: Día (AAAA-MM-DD)
+        collection_formats = {}
+
+        path_params = {}
+        if 'ccaa' in params:
+            path_params['ccaa'] = params['ccaa']  # noqa: E501
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/ccaa/medioplazo/{ccaa}/elaboracion/{fecha}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_ccaa_medio_plazo__tiempo_actual_(self, ccaa, **kwargs):  # noqa: E501
+        """Predicción CCAA medio plazo. Tiempo actual.  # noqa: E501
+
+        Predicción para la comunidad autónoma que se pasa como parámetro (ccaa) y con validez para el medio plazo a partir de la fecha de petición. En el caso de que en el fecha de la petición no se hubiera generado aún el producto, se retornará el última elaborado. Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_medio_plazo__tiempo_actual_(ccaa, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/nacional/manana/elaboracion/" + fecha
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_ccaa_medio_plazo__tiempo_actual__with_http_info(ccaa, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_ccaa_medio_plazo__tiempo_actual__with_http_info(ccaa, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_nacional_maana__tiempo_actual_(self):
-        """Predicción nacional mañana. Tiempo actual.
+    def prediccin_ccaa_medio_plazo__tiempo_actual__with_http_info(self, ccaa, **kwargs):  # noqa: E501
+        """Predicción CCAA medio plazo. Tiempo actual.  # noqa: E501
 
-        Predicción nacional para el día siguiente a la fecha de
-        elaboración. En este caso la fecha de elaboración es el día actual.
-        Actualización diaria. En el caso de que en el día actual
-        todavía no se haya elaborado se devolverá el último producto de
-        predicción nacional para mañana elaborado.
+        Predicción para la comunidad autónoma que se pasa como parámetro (ccaa) y con validez para el medio plazo a partir de la fecha de petición. En el caso de que en el fecha de la petición no se hubiera generado aún el producto, se retornará el última elaborado. Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_medio_plazo__tiempo_actual__with_http_info(ccaa, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/nacional/manana")
 
-    async def prediccin_nacional_medio_plazo__archivo_(self, fecha):
-        """Predicción nacional medio plazo. Archivo.
+        all_params = ['ccaa']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Predicción nacional para el medio plazo siguiente a la fecha de
-        elaboración. En este caso, la fecha de elaboración es la fecha que
-        se pasa como parámetro. Actualización diaria.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_ccaa_medio_plazo__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'ccaa' is set
+        if ('ccaa' not in params or
+                params['ccaa'] is None):
+            raise ValueError("Missing the required parameter `ccaa` when calling `prediccin_ccaa_medio_plazo__tiempo_actual_`")  # noqa: E501
 
-        :param str fecha: Día (AAAA-MM-DD)
+        collection_formats = {}
+
+        path_params = {}
+        if 'ccaa' in params:
+            path_params['ccaa'] = params['ccaa']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/ccaa/medioplazo/{ccaa}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_ccaa_pasado_maana__archivo_(self, ccaa, fecha, **kwargs):  # noqa: E501
+        """Predicción CCAA pasado mañana. Archivo.  # noqa: E501
+
+        Predicción para la comunidad autónoma que se pasa como parámetro (ccaa) y validez para pasado mañana a partir de la fecha de elaboración que se pasa como parámetro (fecha). Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_pasado_maana__archivo_(ccaa, fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/nacional/medioplazo/elaboracion/" + fecha
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_ccaa_pasado_maana__archivo__with_http_info(ccaa, fecha, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_ccaa_pasado_maana__archivo__with_http_info(ccaa, fecha, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_nacional_medio_plazo__tiempo_actual_(self):
-        """Predicción nacional medio plazo. Tiempo actual.
+    def prediccin_ccaa_pasado_maana__archivo__with_http_info(self, ccaa, fecha, **kwargs):  # noqa: E501
+        """Predicción CCAA pasado mañana. Archivo.  # noqa: E501
 
-        Predicción nacional para medio plazo siguiente a la fecha de
-        elaboración. En este caso la fecha de elaboración es el día actual.
-        Actualización diaria. En el caso de que en el día actual
-        todavía no se haya elaborado se devolverá el último producto de
-        predicción nacional para medio plazo elaborado.
+        Predicción para la comunidad autónoma que se pasa como parámetro (ccaa) y validez para pasado mañana a partir de la fecha de elaboración que se pasa como parámetro (fecha). Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_pasado_maana__archivo__with_http_info(ccaa, fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/nacional/medioplazo")
 
-    async def prediccin_nacional_pasado_maana__archivo_(self, fecha):
-        """Predicción nacional pasado mañana. Archivo.
+        all_params = ['ccaa', 'fecha']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Predicción nacional para pasado mañana siguiente a la fecha
-        de elaboración. En este caso, la fecha de elaboración es la fecha
-        que se pasa como parámetro. Actualización diaria.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_ccaa_pasado_maana__archivo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'ccaa' is set
+        if ('ccaa' not in params or
+                params['ccaa'] is None):
+            raise ValueError("Missing the required parameter `ccaa` when calling `prediccin_ccaa_pasado_maana__archivo_`")  # noqa: E501
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `prediccin_ccaa_pasado_maana__archivo_`")  # noqa: E501
 
-        :param str fecha: Día (AAAA-MM-DD)
+        collection_formats = {}
+
+        path_params = {}
+        if 'ccaa' in params:
+            path_params['ccaa'] = params['ccaa']  # noqa: E501
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/ccaa/pasadomanana/{ccaa}/elaboracion/{fecha}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_ccaa_pasado_maana__tiempo_actual_(self, ccaa, **kwargs):  # noqa: E501
+        """Predicción CCAA pasado mañana. Tiempo actual.  # noqa: E501
+
+        Predicción para la comunidad autónoma que se pasa como parámetro (ccaa) y validez para el medio plazo a partir de la fecha de la petición. En el caso de que en la fecha de la petición dicho producto aún no se hubiera generado retornará el último de este tipo que se hubiera generado.  Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_pasado_maana__tiempo_actual_(ccaa, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/nacional/pasadomanana/elaboracion/" + fecha
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_ccaa_pasado_maana__tiempo_actual__with_http_info(ccaa, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_ccaa_pasado_maana__tiempo_actual__with_http_info(ccaa, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_nacional_pasado_maana__tiempo_actual_(self):
-        """Predicción nacional pasado mañana. Tiempo actual.
+    def prediccin_ccaa_pasado_maana__tiempo_actual__with_http_info(self, ccaa, **kwargs):  # noqa: E501
+        """Predicción CCAA pasado mañana. Tiempo actual.  # noqa: E501
 
-        Predicción nacional para pasado mañana siguiente a la fecha de
-        elaboración. En este caso la fecha de elaboración es el día actual.
-        Actualización diaria. En el caso de que en el día actual todavía
-        no se haya elaborado se devolverá el último producto de
-        predicción nacional para pasado mañana elaborado.
+        Predicción para la comunidad autónoma que se pasa como parámetro (ccaa) y validez para el medio plazo a partir de la fecha de la petición. En el caso de que en la fecha de la petición dicho producto aún no se hubiera generado retornará el último de este tipo que se hubiera generado.  Periodicidad de actualización: continuamente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_ccaa_pasado_maana__tiempo_actual__with_http_info(ccaa, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str ccaa:  | Código de CCAA | CCAA | |----------|----------| | and  | Andalucía   | | arn  | Aragón   | | ast  | Astrrias  | | bal  | Ballears, Illes   | | coo  | Canarias   | | can  | Cantabria   | | cle  | Castilla y León   | | clm  | Castilla - La Mancha   | | cat  | Cataluña   | | val  | Comunitat Valenciana   | | ext  | Extremadura   | | gal  | Galicia   | | mad  | Madrid, Comunidad de    | | mur  | Murcia, Región de   | | nav  | Navarra, Comunidad Foral de   | | pva  | País Vasco | | rio  | Rioja, La    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/nacional/pasadomanana")
 
-    async def prediccin_nacional_tendencia__archivo_(self, fecha):
-        """Predicción nacional tendencia. Archivo.
+        all_params = ['ccaa']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Predicción nacional para tendencia siguiente a la fecha de
-        elaboración.
-        En este caso, la fecha de elaboración es la fecha que se pasa
-        como parámetro. Actualización diaria.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_ccaa_pasado_maana__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'ccaa' is set
+        if ('ccaa' not in params or
+                params['ccaa'] is None):
+            raise ValueError("Missing the required parameter `ccaa` when calling `prediccin_ccaa_pasado_maana__tiempo_actual_`")  # noqa: E501
 
-        :param str fecha: Día (AAAA-MM-DD)
+        collection_formats = {}
+
+        path_params = {}
+        if 'ccaa' in params:
+            path_params['ccaa'] = params['ccaa']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/ccaa/pasadomanana/{ccaa}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_nacional_hoy__archivo_(self, fecha, **kwargs):  # noqa: E501
+        """Predicción nacional hoy. Archivo.  # noqa: E501
+
+        Predicción nacional para el día correspondiente a la fecha que se pasa como parámetro en en formato texto. Actualización diaria. Hay días en los que este producto no se realiza. En ese caso se devuelve un 404 producto no existente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_hoy__archivo_(fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha: Fecha en formato (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/nacional/tendencia/elaboracion/" + fecha
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_nacional_hoy__archivo__with_http_info(fecha, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_nacional_hoy__archivo__with_http_info(fecha, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_nacional_tendencia__tiempo_actual_(self):
-        """Predicción nacional tendencia. Tiempo actual.
+    def prediccin_nacional_hoy__archivo__with_http_info(self, fecha, **kwargs):  # noqa: E501
+        """Predicción nacional hoy. Archivo.  # noqa: E501
 
-        Predicción nacional para tendencia siguiente a la fecha de
-        elaboración.
-        En este caso la fecha de elaboración es el día actual.
-        Actualización diaria.
-        En el caso de que en el día actual todavía no se haya elaborado
-        se devolverá el último producto de predicción nacional para
-        tendencia elaborado.
+        Predicción nacional para el día correspondiente a la fecha que se pasa como parámetro en en formato texto. Actualización diaria. Hay días en los que este producto no se realiza. En ese caso se devuelve un 404 producto no existente.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_hoy__archivo__with_http_info(fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha: Fecha en formato (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/nacional/tendencia")
 
-    async def prediccin_provincia_hoy__archivo_(self, provincia, fecha):
-        """Predicción provincia hoy. Archivo.
+        all_params = ['fecha']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Predicción del día siguiente a la fecha que se pasa como parámetro
-        para la provincia que se pasa como parámetro.
-        Actualización continua y fija a las 14:00 Hora Oficial Peninsular
-        del día que se pasa como parámetro.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_nacional_hoy__archivo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `prediccin_nacional_hoy__archivo_`")  # noqa: E501
 
-        :param str provincia: Código Provincia
-                                    01 -> Araba/Álaba
-                                    01 -> Araba/Álava
-                                    02 -> Albacete
-                                    03 -> Alacant/Alicante
-                                    04 -> Almería
-                                    33 -> Asturias
-                                    05 -> Ávila
-                                    06 -> Badajoz
-                                    07 -> Illes Ballears
-                                    08 -> Barcelona
-                                    48 -> Bizkaia
-                                    09 -> Burgos
-                                    10 -> Cáceres
-                                    11 -> Cádiz
-                                    39 -> Cantabria
-                                    12 -> Castelló/Castellón
-                                    51 -> Ceuta
-                                    13 -> Ciudad Real
-                                    14 -> Córdoba
-                                    15 -> A Coruña
-                                    16 -> Cuenca
-                                    17 -> Girona
-                                    18 -> Granada
-                                    19 -> Guadalajara
-                                    20 -> Gipuzkoa
-                                    21 -> Huelva
-                                    22 -> Huesca
-                                    23 -> Jaén
-                                    24 -> León
-                                    25 -> Lleida
-                                    27 -> Lugo
-                                    28 -> Madrid
-                                    29 -> Málaga
-                                    52 -> Melilla
-                                    30 -> Murcia
-                                    31 -> Navarra
-                                    32 -> Oursense
-                                    34 -> Palencia
-                                    35 -> Las Palmas
-                                    36 -> Pontevedra
-                                    26 -> La Rioja
-                                    37 -> Salamanca
-                                    38 -> Santa Cruz de Tenerife
-                                    40 -> Segovia
-                                    41 -> Sevilla
-                                    42 -> Soria
-                                    43 -> Tarragona
-                                    44 -> Teruel
-                                    45 -> Toledo
-                                    46 -> València/Valencia
-                                    47 -> Valladolid
-                                    49 -> Zamora
-                                    50 -> Zaragoza
-        :param str fecha: Día de elaboración (AAAA-MM-DD)
+        collection_formats = {}
+
+        path_params = {}
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/nacional/hoy/elaboracion/{fecha}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_nacional_hoy__tiempo_actual_(self, **kwargs):  # noqa: E501
+        """Predicción nacional hoy. Última elaborada.  # noqa: E501
+
+        Predicción nacional para el día actual a la fecha de elaboración en formato texto. Actualización diaria. Hay días en los que este producto no se realiza. En ese caso se devuelve la predicción nacional última que se elaboró.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_hoy__tiempo_actual_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/provincia/hoy/" + provincia + "/elaboracion/" + fecha
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_nacional_hoy__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_nacional_hoy__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_provincia_hoy__tiempo_actual_(self, provincia):
-        """Predicción provincia hoy. Tiempo actual.
+    def prediccin_nacional_hoy__tiempo_actual__with_http_info(self, **kwargs):  # noqa: E501
+        """Predicción nacional hoy. Última elaborada.  # noqa: E501
 
-        Predicción del día actual para la provincia que se pasa como
-        parámetro.
-        En el caso de que este producto no se haya elaborado todavía en
-        el día actual, se retorna el último elaborado.
-        Actualización continua y fija a las 14:00 Hora Oficial Peninsular.
+        Predicción nacional para el día actual a la fecha de elaboración en formato texto. Actualización diaria. Hay días en los que este producto no se realiza. En ese caso se devuelve la predicción nacional última que se elaboró.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_hoy__tiempo_actual__with_http_info(async_req=True)
+        >>> result = thread.get()
 
-        :param str provincia: Código Provincia
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/prediccion/provincia/hoy/" + provincia)
 
-    async def prediccin_provincia_maana__archivo_(self, provincia, fecha):
-        """Predicción provincia mañana. Archivo.
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Predicción del día siguiente a la fecha que se pasa como parámetro
-        para la provincia que se pasa como parámetro.
-        Actualización continua y fija a las 14:00 Hora Oficial Peninsular
-        del día que se pasa como parámetro.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_nacional_hoy__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
 
-        :param str provincia: Código Provincia
-        :param str fecha: Día de elaboración (AAAA-MM-DD)
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/nacional/hoy', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_nacional_maana__archivo_(self, fecha, **kwargs):  # noqa: E501
+        """Predicción nacional mañana. Archivo.  # noqa: E501
+
+        Predicción nacional para el día siguiente a la fecha de elaboración. En este caso la fecha de elaboración es la fecha que se pasa como parámetro. Actualización diaria.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_maana__archivo_(fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha: Día (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/provincia/manana/" + provincia + "/elaboracion/" + fecha
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_nacional_maana__archivo__with_http_info(fecha, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_nacional_maana__archivo__with_http_info(fecha, **kwargs)  # noqa: E501
+            return data
 
-    async def prediccin_provincia_maana__tiempo_actual_(self, provincia):
-        """Predicción provincia mañana. Tiempo actual.
+    def prediccin_nacional_maana__archivo__with_http_info(self, fecha, **kwargs):  # noqa: E501
+        """Predicción nacional mañana. Archivo.  # noqa: E501
 
-        Predicción del día siguiente para la provincia que se pasa como
-        parámetro.
-        En el caso de que este producto no se haya elaborado todavía en
-        el día actual, se retorna el último elaborado.
-        Actualización continua y fija a las 14:00 Hora Oficial Peninsular.
+        Predicción nacional para el día siguiente a la fecha de elaboración. En este caso la fecha de elaboración es la fecha que se pasa como parámetro. Actualización diaria.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_maana__archivo__with_http_info(fecha, async_req=True)
+        >>> result = thread.get()
 
-        :param str provincia: Código Provincia
+        :param async_req bool
+        :param str fecha: Día (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/prediccion/provincia/manana/" + provincia
-        )
+
+        all_params = ['fecha']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_nacional_maana__archivo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `prediccin_nacional_maana__archivo_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/nacional/manana/elaboracion/{fecha}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_nacional_maana__tiempo_actual_(self, **kwargs):  # noqa: E501
+        """Predicción nacional mañana. Tiempo actual.  # noqa: E501
+
+        Predicción nacional para el día siguiente a la fecha de elaboración. En este caso la fecha de elaboración es el día actual. Actualización diaria. En el caso de que en el día actual  todavía no se haya elaborado se devolverá el último producto de predicción nacional para mañana elaborado.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_maana__tiempo_actual_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_nacional_maana__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_nacional_maana__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def prediccin_nacional_maana__tiempo_actual__with_http_info(self, **kwargs):  # noqa: E501
+        """Predicción nacional mañana. Tiempo actual.  # noqa: E501
+
+        Predicción nacional para el día siguiente a la fecha de elaboración. En este caso la fecha de elaboración es el día actual. Actualización diaria. En el caso de que en el día actual  todavía no se haya elaborado se devolverá el último producto de predicción nacional para mañana elaborado.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_maana__tiempo_actual__with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_nacional_maana__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/nacional/manana', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_nacional_medio_plazo__archivo_(self, fecha, **kwargs):  # noqa: E501
+        """Predicción nacional medio plazo. Archivo.  # noqa: E501
+
+        Predicción nacional para el medio plazo siguiente a la fecha de elaboración. En este caso, la fecha de elaboración es la fecha que se pasa como parámetro. Actualización diaria.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_medio_plazo__archivo_(fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha: Día (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_nacional_medio_plazo__archivo__with_http_info(fecha, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_nacional_medio_plazo__archivo__with_http_info(fecha, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_nacional_medio_plazo__archivo__with_http_info(self, fecha, **kwargs):  # noqa: E501
+        """Predicción nacional medio plazo. Archivo.  # noqa: E501
+
+        Predicción nacional para el medio plazo siguiente a la fecha de elaboración. En este caso, la fecha de elaboración es la fecha que se pasa como parámetro. Actualización diaria.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_medio_plazo__archivo__with_http_info(fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha: Día (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['fecha']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_nacional_medio_plazo__archivo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `prediccin_nacional_medio_plazo__archivo_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/nacional/medioplazo/elaboracion/{fecha}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_nacional_medio_plazo__tiempo_actual_(self, **kwargs):  # noqa: E501
+        """Predicción nacional medio plazo. Tiempo actual.  # noqa: E501
+
+        Predicción nacional para medio plazo siguiente a la fecha de elaboración. En este caso la fecha de elaboración es el día actual. Actualización diaria. En el caso de que en el día actual  todavía no se haya elaborado se devolverá el último producto de predicción nacional para medio plazo elaborado.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_medio_plazo__tiempo_actual_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_nacional_medio_plazo__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_nacional_medio_plazo__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def prediccin_nacional_medio_plazo__tiempo_actual__with_http_info(self, **kwargs):  # noqa: E501
+        """Predicción nacional medio plazo. Tiempo actual.  # noqa: E501
+
+        Predicción nacional para medio plazo siguiente a la fecha de elaboración. En este caso la fecha de elaboración es el día actual. Actualización diaria. En el caso de que en el día actual  todavía no se haya elaborado se devolverá el último producto de predicción nacional para medio plazo elaborado.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_medio_plazo__tiempo_actual__with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_nacional_medio_plazo__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/nacional/medioplazo', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_nacional_pasado_maana__archivo_(self, fecha, **kwargs):  # noqa: E501
+        """Predicción nacional pasado mañana. Archivo.  # noqa: E501
+
+        Predicción nacional para pasado mañana siguiente a la fecha de elaboración. En este caso, la fecha de elaboración es la fecha que se pasa como parámetro. Actualización diaria.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_pasado_maana__archivo_(fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha: Día (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_nacional_pasado_maana__archivo__with_http_info(fecha, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_nacional_pasado_maana__archivo__with_http_info(fecha, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_nacional_pasado_maana__archivo__with_http_info(self, fecha, **kwargs):  # noqa: E501
+        """Predicción nacional pasado mañana. Archivo.  # noqa: E501
+
+        Predicción nacional para pasado mañana siguiente a la fecha de elaboración. En este caso, la fecha de elaboración es la fecha que se pasa como parámetro. Actualización diaria.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_pasado_maana__archivo__with_http_info(fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha: Día (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['fecha']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_nacional_pasado_maana__archivo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `prediccin_nacional_pasado_maana__archivo_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/nacional/pasadomanana/elaboracion/{fecha}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_nacional_pasado_maana__tiempo_actual_(self, **kwargs):  # noqa: E501
+        """Predicción nacional pasado mañana. Tiempo actual.  # noqa: E501
+
+        Predicción nacional para pasado mañana siguiente a la fecha de elaboración. En este caso la fecha de elaboración es el día actual. Actualización diaria. En el caso de que en el día actual  todavía no se haya elaborado se devolverá el último producto de predicción nacional para pasado mañana elaborado.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_pasado_maana__tiempo_actual_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_nacional_pasado_maana__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_nacional_pasado_maana__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def prediccin_nacional_pasado_maana__tiempo_actual__with_http_info(self, **kwargs):  # noqa: E501
+        """Predicción nacional pasado mañana. Tiempo actual.  # noqa: E501
+
+        Predicción nacional para pasado mañana siguiente a la fecha de elaboración. En este caso la fecha de elaboración es el día actual. Actualización diaria. En el caso de que en el día actual  todavía no se haya elaborado se devolverá el último producto de predicción nacional para pasado mañana elaborado.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_pasado_maana__tiempo_actual__with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_nacional_pasado_maana__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/nacional/pasadomanana', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_nacional_tendencia__archivo_(self, fecha, **kwargs):  # noqa: E501
+        """Predicción nacional tendencia. Archivo.  # noqa: E501
+
+        Predicción nacional para tendencia siguiente a la fecha de elaboración. En este caso, la fecha de elaboración es la fecha que se pasa como parámetro. Actualización diaria.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_tendencia__archivo_(fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha: Día (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_nacional_tendencia__archivo__with_http_info(fecha, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_nacional_tendencia__archivo__with_http_info(fecha, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_nacional_tendencia__archivo__with_http_info(self, fecha, **kwargs):  # noqa: E501
+        """Predicción nacional tendencia. Archivo.  # noqa: E501
+
+        Predicción nacional para tendencia siguiente a la fecha de elaboración. En este caso, la fecha de elaboración es la fecha que se pasa como parámetro. Actualización diaria.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_tendencia__archivo__with_http_info(fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha: Día (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['fecha']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_nacional_tendencia__archivo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `prediccin_nacional_tendencia__archivo_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/nacional/tendencia/elaboracion/{fecha}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_nacional_tendencia__tiempo_actual_(self, **kwargs):  # noqa: E501
+        """Predicción nacional tendencia. Tiempo actual.  # noqa: E501
+
+        Predicción nacional para tendencia siguiente a la fecha de elaboración. En este caso la fecha de elaboración es el día actual. Actualización diaria. En el caso de que en el día actual  todavía no se haya elaborado se devolverá el último producto de predicción nacional para tendencia elaborado.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_tendencia__tiempo_actual_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_nacional_tendencia__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_nacional_tendencia__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def prediccin_nacional_tendencia__tiempo_actual__with_http_info(self, **kwargs):  # noqa: E501
+        """Predicción nacional tendencia. Tiempo actual.  # noqa: E501
+
+        Predicción nacional para tendencia siguiente a la fecha de elaboración. En este caso la fecha de elaboración es el día actual. Actualización diaria. En el caso de que en el día actual  todavía no se haya elaborado se devolverá el último producto de predicción nacional para tendencia elaborado.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_nacional_tendencia__tiempo_actual__with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_nacional_tendencia__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/nacional/tendencia', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_provincia_hoy__archivo_(self, provincia, fecha, **kwargs):  # noqa: E501
+        """Predicción provincia hoy. Archivo.  # noqa: E501
+
+        Predicción del día siguiente a la fecha que se pasa como parámetro para la provincia que se pasa como parámetro. Actualización continua y fija a las 14:00 Hora Oficial Peninsular del día que se pasa como parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_provincia_hoy__archivo_(provincia, fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str provincia:  | Código Provincia | Provincia | |----------|----------| | 01  | Araba/Álaba   | | 01  | Araba/Álava   | | 02  | Albacete   | | 03  | Alacant/Alicante  | | 04  | Almería   | | 33  | Asturias   | | 05  | Ávila   | | 06  | Badajoz   | | 07  | Illes Ballears   | | 08  | Barcelona   | | 48  | Bizkaia   | | 09  | Burgos   | | 10  | Cáceres   | | 11  | Cádiz   | | 39  | Cantabria   | | 12  | Castelló/Castellón   | | 51  | Ceuta   | | 13  | Ciudad Real   | | 14  | Córdoba   | | 15  | A Coruña   | | 16  | Cuenca   | | 17  | Girona   | | 18  | Granada   | | 19  | Guadalajara   | | 20  | Gipuzkoa   | | 21  | Huelva   | | 22  | Huesca   | | 23  | Jaén   | | 24  | León   | | 25  | Lleida   | | 27  | Lugo   | | 28  | Madrid   | | 29  | Málaga   | | 52  | Melilla   | | 30  | Murcia   | | 31  | Navarra   | | 32  | Oursense   | | 34  | Palencia   | | 35  | Las Palmas   | | 36  | Pontevedra   | | 26  | La Rioja   | | 37  | Salamanca   | | 38  | Santa Cruz de Tenerife   | | 40  | Segovia   | | 41  | Sevilla   | | 42  | Soria   | | 43  | Tarragona   | | 44  | Teruel   | | 45  | Toledo   | | 46  | València/Valencia   | | 47  | Valladolid   | | 49  | Zamora   | | 50  | Zaragoza   | |  (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_provincia_hoy__archivo__with_http_info(provincia, fecha, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_provincia_hoy__archivo__with_http_info(provincia, fecha, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_provincia_hoy__archivo__with_http_info(self, provincia, fecha, **kwargs):  # noqa: E501
+        """Predicción provincia hoy. Archivo.  # noqa: E501
+
+        Predicción del día siguiente a la fecha que se pasa como parámetro para la provincia que se pasa como parámetro. Actualización continua y fija a las 14:00 Hora Oficial Peninsular del día que se pasa como parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_provincia_hoy__archivo__with_http_info(provincia, fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str provincia:  | Código Provincia | Provincia | |----------|----------| | 01  | Araba/Álaba   | | 01  | Araba/Álava   | | 02  | Albacete   | | 03  | Alacant/Alicante  | | 04  | Almería   | | 33  | Asturias   | | 05  | Ávila   | | 06  | Badajoz   | | 07  | Illes Ballears   | | 08  | Barcelona   | | 48  | Bizkaia   | | 09  | Burgos   | | 10  | Cáceres   | | 11  | Cádiz   | | 39  | Cantabria   | | 12  | Castelló/Castellón   | | 51  | Ceuta   | | 13  | Ciudad Real   | | 14  | Córdoba   | | 15  | A Coruña   | | 16  | Cuenca   | | 17  | Girona   | | 18  | Granada   | | 19  | Guadalajara   | | 20  | Gipuzkoa   | | 21  | Huelva   | | 22  | Huesca   | | 23  | Jaén   | | 24  | León   | | 25  | Lleida   | | 27  | Lugo   | | 28  | Madrid   | | 29  | Málaga   | | 52  | Melilla   | | 30  | Murcia   | | 31  | Navarra   | | 32  | Oursense   | | 34  | Palencia   | | 35  | Las Palmas   | | 36  | Pontevedra   | | 26  | La Rioja   | | 37  | Salamanca   | | 38  | Santa Cruz de Tenerife   | | 40  | Segovia   | | 41  | Sevilla   | | 42  | Soria   | | 43  | Tarragona   | | 44  | Teruel   | | 45  | Toledo   | | 46  | València/Valencia   | | 47  | Valladolid   | | 49  | Zamora   | | 50  | Zaragoza   | |  (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['provincia', 'fecha']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_provincia_hoy__archivo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'provincia' is set
+        if ('provincia' not in params or
+                params['provincia'] is None):
+            raise ValueError("Missing the required parameter `provincia` when calling `prediccin_provincia_hoy__archivo_`")  # noqa: E501
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `prediccin_provincia_hoy__archivo_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'provincia' in params:
+            path_params['provincia'] = params['provincia']  # noqa: E501
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/provincia/hoy/{provincia}/elaboracion/{fecha}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_provincia_hoy__tiempo_actual_(self, provincia, **kwargs):  # noqa: E501
+        """Predicción provincia hoy. Tiempo actual.  # noqa: E501
+
+        Predicción del día actual para la provincia que se pasa como parámetro. En el caso de que este producto no se haya elaborado todavía en el día actual, se retorna el último elaborado. Actualización continua y fija a las 14:00 Hora Oficial Peninsular.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_provincia_hoy__tiempo_actual_(provincia, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str provincia:  | Código Provincia | Provincia | |----------|----------| | 01  | Araba/Álaba   | | 01  | Araba/Álava   | | 02  | Albacete   | | 03  | Alacant/Alicante  | | 04  | Almería   | | 33  | Asturias   | | 05  | Ávila   | | 06  | Badajoz   | | 07  | Illes Ballears   | | 08  | Barcelona   | | 48  | Bizkaia   | | 09  | Burgos   | | 10  | Cáceres   | | 11  | Cádiz   | | 39  | Cantabria   | | 12  | Castelló/Castellón   | | 51  | Ceuta   | | 13  | Ciudad Real   | | 14  | Córdoba   | | 15  | A Coruña   | | 16  | Cuenca   | | 17  | Girona   | | 18  | Granada   | | 19  | Guadalajara   | | 20  | Gipuzkoa   | | 21  | Huelva   | | 22  | Huesca   | | 23  | Jaén   | | 24  | León   | | 25  | Lleida   | | 27  | Lugo   | | 28  | Madrid   | | 29  | Málaga   | | 52  | Melilla   | | 30  | Murcia   | | 31  | Navarra   | | 32  | Oursense   | | 34  | Palencia   | | 35  | Las Palmas   | | 36  | Pontevedra   | | 26  | La Rioja   | | 37  | Salamanca   | | 38  | Santa Cruz de Tenerife   | | 40  | Segovia   | | 41  | Sevilla   | | 42  | Soria   | | 43  | Tarragona   | | 44  | Teruel   | | 45  | Toledo   | | 46  | València/Valencia   | | 47  | Valladolid   | | 49  | Zamora   | | 50  | Zaragoza   | |  (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_provincia_hoy__tiempo_actual__with_http_info(provincia, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_provincia_hoy__tiempo_actual__with_http_info(provincia, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_provincia_hoy__tiempo_actual__with_http_info(self, provincia, **kwargs):  # noqa: E501
+        """Predicción provincia hoy. Tiempo actual.  # noqa: E501
+
+        Predicción del día actual para la provincia que se pasa como parámetro. En el caso de que este producto no se haya elaborado todavía en el día actual, se retorna el último elaborado. Actualización continua y fija a las 14:00 Hora Oficial Peninsular.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_provincia_hoy__tiempo_actual__with_http_info(provincia, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str provincia:  | Código Provincia | Provincia | |----------|----------| | 01  | Araba/Álaba   | | 01  | Araba/Álava   | | 02  | Albacete   | | 03  | Alacant/Alicante  | | 04  | Almería   | | 33  | Asturias   | | 05  | Ávila   | | 06  | Badajoz   | | 07  | Illes Ballears   | | 08  | Barcelona   | | 48  | Bizkaia   | | 09  | Burgos   | | 10  | Cáceres   | | 11  | Cádiz   | | 39  | Cantabria   | | 12  | Castelló/Castellón   | | 51  | Ceuta   | | 13  | Ciudad Real   | | 14  | Córdoba   | | 15  | A Coruña   | | 16  | Cuenca   | | 17  | Girona   | | 18  | Granada   | | 19  | Guadalajara   | | 20  | Gipuzkoa   | | 21  | Huelva   | | 22  | Huesca   | | 23  | Jaén   | | 24  | León   | | 25  | Lleida   | | 27  | Lugo   | | 28  | Madrid   | | 29  | Málaga   | | 52  | Melilla   | | 30  | Murcia   | | 31  | Navarra   | | 32  | Oursense   | | 34  | Palencia   | | 35  | Las Palmas   | | 36  | Pontevedra   | | 26  | La Rioja   | | 37  | Salamanca   | | 38  | Santa Cruz de Tenerife   | | 40  | Segovia   | | 41  | Sevilla   | | 42  | Soria   | | 43  | Tarragona   | | 44  | Teruel   | | 45  | Toledo   | | 46  | València/Valencia   | | 47  | Valladolid   | | 49  | Zamora   | | 50  | Zaragoza   | |  (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['provincia']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_provincia_hoy__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'provincia' is set
+        if ('provincia' not in params or
+                params['provincia'] is None):
+            raise ValueError("Missing the required parameter `provincia` when calling `prediccin_provincia_hoy__tiempo_actual_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'provincia' in params:
+            path_params['provincia'] = params['provincia']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/provincia/hoy/{provincia}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_provincia_maana__archivo_(self, provincia, fecha, **kwargs):  # noqa: E501
+        """Predicción provincia mañana. Archivo.  # noqa: E501
+
+        Predicción del día siguiente a la fecha que se pasa como parámetro para la provincia que se pasa como parámetro. Actualización continua y fija a las 14:00 Hora Oficial Peninsular del día que se pasa como parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_provincia_maana__archivo_(provincia, fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str provincia:  | Código Provincia | Provincia | |----------|----------| | 01  | Araba/Álaba   | | 01  | Araba/Álava   | | 02  | Albacete   | | 03  | Alacant/Alicante  | | 04  | Almería   | | 33  | Asturias   | | 05  | Ávila   | | 06  | Badajoz   | | 07  | Illes Ballears   | | 08  | Barcelona   | | 48  | Bizkaia   | | 09  | Burgos   | | 10  | Cáceres   | | 11  | Cádiz   | | 39  | Cantabria   | | 12  | Castelló/Castellón   | | 51  | Ceuta   | | 13  | Ciudad Real   | | 14  | Córdoba   | | 15  | A Coruña   | | 16  | Cuenca   | | 17  | Girona   | | 18  | Granada   | | 19  | Guadalajara   | | 20  | Gipuzkoa   | | 21  | Huelva   | | 22  | Huesca   | | 23  | Jaén   | | 24  | León   | | 25  | Lleida   | | 27  | Lugo   | | 28  | Madrid   | | 29  | Málaga   | | 52  | Melilla   | | 30  | Murcia   | | 31  | Navarra   | | 32  | Oursense   | | 34  | Palencia   | | 35  | Las Palmas   | | 36  | Pontevedra   | | 26  | La Rioja   | | 37  | Salamanca   | | 38  | Santa Cruz de Tenerife   | | 40  | Segovia   | | 41  | Sevilla   | | 42  | Soria   | | 43  | Tarragona   | | 44  | Teruel   | | 45  | Toledo   | | 46  | València/Valencia   | | 47  | Valladolid   | | 49  | Zamora   | | 50  | Zaragoza   | |  (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_provincia_maana__archivo__with_http_info(provincia, fecha, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_provincia_maana__archivo__with_http_info(provincia, fecha, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_provincia_maana__archivo__with_http_info(self, provincia, fecha, **kwargs):  # noqa: E501
+        """Predicción provincia mañana. Archivo.  # noqa: E501
+
+        Predicción del día siguiente a la fecha que se pasa como parámetro para la provincia que se pasa como parámetro. Actualización continua y fija a las 14:00 Hora Oficial Peninsular del día que se pasa como parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_provincia_maana__archivo__with_http_info(provincia, fecha, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str provincia:  | Código Provincia | Provincia | |----------|----------| | 01  | Araba/Álaba   | | 01  | Araba/Álava   | | 02  | Albacete   | | 03  | Alacant/Alicante  | | 04  | Almería   | | 33  | Asturias   | | 05  | Ávila   | | 06  | Badajoz   | | 07  | Illes Ballears   | | 08  | Barcelona   | | 48  | Bizkaia   | | 09  | Burgos   | | 10  | Cáceres   | | 11  | Cádiz   | | 39  | Cantabria   | | 12  | Castelló/Castellón   | | 51  | Ceuta   | | 13  | Ciudad Real   | | 14  | Córdoba   | | 15  | A Coruña   | | 16  | Cuenca   | | 17  | Girona   | | 18  | Granada   | | 19  | Guadalajara   | | 20  | Gipuzkoa   | | 21  | Huelva   | | 22  | Huesca   | | 23  | Jaén   | | 24  | León   | | 25  | Lleida   | | 27  | Lugo   | | 28  | Madrid   | | 29  | Málaga   | | 52  | Melilla   | | 30  | Murcia   | | 31  | Navarra   | | 32  | Oursense   | | 34  | Palencia   | | 35  | Las Palmas   | | 36  | Pontevedra   | | 26  | La Rioja   | | 37  | Salamanca   | | 38  | Santa Cruz de Tenerife   | | 40  | Segovia   | | 41  | Sevilla   | | 42  | Soria   | | 43  | Tarragona   | | 44  | Teruel   | | 45  | Toledo   | | 46  | València/Valencia   | | 47  | Valladolid   | | 49  | Zamora   | | 50  | Zaragoza   | |  (required)
+        :param str fecha: Día de elaboración (AAAA-MM-DD) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['provincia', 'fecha']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_provincia_maana__archivo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'provincia' is set
+        if ('provincia' not in params or
+                params['provincia'] is None):
+            raise ValueError("Missing the required parameter `provincia` when calling `prediccin_provincia_maana__archivo_`")  # noqa: E501
+        # verify the required parameter 'fecha' is set
+        if ('fecha' not in params or
+                params['fecha'] is None):
+            raise ValueError("Missing the required parameter `fecha` when calling `prediccin_provincia_maana__archivo_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'provincia' in params:
+            path_params['provincia'] = params['provincia']  # noqa: E501
+        if 'fecha' in params:
+            path_params['fecha'] = params['fecha']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/provincia/manana/{provincia}/elaboracion/{fecha}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def prediccin_provincia_maana__tiempo_actual_(self, provincia, **kwargs):  # noqa: E501
+        """Predicción provincia mañana. Tiempo actual.  # noqa: E501
+
+        Predicción del día siguiente para la provincia que se pasa como parámetro. En el caso de que este producto no se haya elaborado todavía en el día actual, se retorna el último elaborado. Actualización continua y fija a las 14:00 Hora Oficial Peninsular.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_provincia_maana__tiempo_actual_(provincia, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str provincia:  | Código Provincia | Provincia | |----------|----------| | 01  | Araba/Álaba   | | 01  | Araba/Álava   | | 02  | Albacete   | | 03  | Alacant/Alicante  | | 04  | Almería   | | 33  | Asturias   | | 05  | Ávila   | | 06  | Badajoz   | | 07  | Illes Ballears   | | 08  | Barcelona   | | 48  | Bizkaia   | | 09  | Burgos   | | 10  | Cáceres   | | 11  | Cádiz   | | 39  | Cantabria   | | 12  | Castelló/Castellón   | | 51  | Ceuta   | | 13  | Ciudad Real   | | 14  | Córdoba   | | 15  | A Coruña   | | 16  | Cuenca   | | 17  | Girona   | | 18  | Granada   | | 19  | Guadalajara   | | 20  | Gipuzkoa   | | 21  | Huelva   | | 22  | Huesca   | | 23  | Jaén   | | 24  | León   | | 25  | Lleida   | | 27  | Lugo   | | 28  | Madrid   | | 29  | Málaga   | | 52  | Melilla   | | 30  | Murcia   | | 31  | Navarra   | | 32  | Oursense   | | 34  | Palencia   | | 35  | Las Palmas   | | 36  | Pontevedra   | | 26  | La Rioja   | | 37  | Salamanca   | | 38  | Santa Cruz de Tenerife   | | 40  | Segovia   | | 41  | Sevilla   | | 42  | Soria   | | 43  | Tarragona   | | 44  | Teruel   | | 45  | Toledo   | | 46  | València/Valencia   | | 47  | Valladolid   | | 49  | Zamora   | | 50  | Zaragoza   | |  (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.prediccin_provincia_maana__tiempo_actual__with_http_info(provincia, **kwargs)  # noqa: E501
+        else:
+            (data) = self.prediccin_provincia_maana__tiempo_actual__with_http_info(provincia, **kwargs)  # noqa: E501
+            return data
+
+    def prediccin_provincia_maana__tiempo_actual__with_http_info(self, provincia, **kwargs):  # noqa: E501
+        """Predicción provincia mañana. Tiempo actual.  # noqa: E501
+
+        Predicción del día siguiente para la provincia que se pasa como parámetro. En el caso de que este producto no se haya elaborado todavía en el día actual, se retorna el último elaborado. Actualización continua y fija a las 14:00 Hora Oficial Peninsular.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.prediccin_provincia_maana__tiempo_actual__with_http_info(provincia, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str provincia:  | Código Provincia | Provincia | |----------|----------| | 01  | Araba/Álaba   | | 01  | Araba/Álava   | | 02  | Albacete   | | 03  | Alacant/Alicante  | | 04  | Almería   | | 33  | Asturias   | | 05  | Ávila   | | 06  | Badajoz   | | 07  | Illes Ballears   | | 08  | Barcelona   | | 48  | Bizkaia   | | 09  | Burgos   | | 10  | Cáceres   | | 11  | Cádiz   | | 39  | Cantabria   | | 12  | Castelló/Castellón   | | 51  | Ceuta   | | 13  | Ciudad Real   | | 14  | Córdoba   | | 15  | A Coruña   | | 16  | Cuenca   | | 17  | Girona   | | 18  | Granada   | | 19  | Guadalajara   | | 20  | Gipuzkoa   | | 21  | Huelva   | | 22  | Huesca   | | 23  | Jaén   | | 24  | León   | | 25  | Lleida   | | 27  | Lugo   | | 28  | Madrid   | | 29  | Málaga   | | 52  | Melilla   | | 30  | Murcia   | | 31  | Navarra   | | 32  | Oursense   | | 34  | Palencia   | | 35  | Las Palmas   | | 36  | Pontevedra   | | 26  | La Rioja   | | 37  | Salamanca   | | 38  | Santa Cruz de Tenerife   | | 40  | Segovia   | | 41  | Sevilla   | | 42  | Soria   | | 43  | Tarragona   | | 44  | Teruel   | | 45  | Toledo   | | 46  | València/Valencia   | | 47  | Valladolid   | | 49  | Zamora   | | 50  | Zaragoza   | |  (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['provincia']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method prediccin_provincia_maana__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'provincia' is set
+        if ('provincia' not in params or
+                params['provincia'] is None):
+            raise ValueError("Missing the required parameter `provincia` when calling `prediccin_provincia_maana__tiempo_actual_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'provincia' in params:
+            path_params['provincia'] = params['provincia']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/prediccion/provincia/manana/{provincia}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
 
 
 class ProductosClimatologicosApi(object):
-    """Balance nacional."""
+    """NOTE: This class is auto generated by the swagger code generator program.
 
-    def __init__(self):
-        """Initialize."""
-        self._aemetClient = aemetClient
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
 
-    async def balance_hdrico_nacional__documento_(self, anio, decena):
-        """Balance hídrico nacional (documento).
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
 
-        Se obtiene, para la decema y el año pasados por parámetro,
-        el Boletín Hídrico Nacional que se elabora cada diez días.
-        Se presenta información resumida de forma distribuida para todo
-        el territorio nacional de diferentes variables, en las que se
-        incluye informaciones de la precipitación y la evapotranspiración
-        potencial acumuladas desde el 1 de septiembre.
+    def balance_hdrico_nacional__documento_(self, anio, decena, **kwargs):  # noqa: E501
+        """Balance hídrico nacional (documento).  # noqa: E501
 
-        :param str anio: Año (AAAA)
-        :param str decena: Decena de 01 (primera decena) a 36 (última decena)
+        Se obtiene, para la decema y el año pasados por parámetro, el Boletín Hídrico Nacional que se elabora cada diez días. Se presenta información resumida de forma distribuida para todo el territorio nacional de diferentes variables, en las que se incluye informaciones de la precipitación y la evapotranspiración potencial acumuladas desde el 1 de septiembre.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.balance_hdrico_nacional__documento_(anio, decena, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str anio: Año (AAAA) (required)
+        :param str decena: Decena de 01 (primera decena) a 36 (última decena) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/productos/climatologicos/balancehidrico/" + anio + "/" + decena
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.balance_hdrico_nacional__documento__with_http_info(anio, decena, **kwargs)  # noqa: E501
+        else:
+            (data) = self.balance_hdrico_nacional__documento__with_http_info(anio, decena, **kwargs)  # noqa: E501
+            return data
 
-    async def capas_shape_de_estaciones_climatolgicas_(self, tipoestacion):
-        """Capas SHAPE de estaciones climatológicas de AEMET.
+    def balance_hdrico_nacional__documento__with_http_info(self, anio, decena, **kwargs):  # noqa: E501
+        """Balance hídrico nacional (documento).  # noqa: E501
 
-        Capas SHAPE de las distintas estaciones climatológicas de AEMET:
-        automáticas, completas, pluviométricas y termométricas.
+        Se obtiene, para la decema y el año pasados por parámetro, el Boletín Hídrico Nacional que se elabora cada diez días. Se presenta información resumida de forma distribuida para todo el territorio nacional de diferentes variables, en las que se incluye informaciones de la precipitación y la evapotranspiración potencial acumuladas desde el 1 de septiembre.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.balance_hdrico_nacional__documento__with_http_info(anio, decena, async_req=True)
+        >>> result = thread.get()
 
-        :param str tipoestacion: Tipo de Estación
-                                    automaticas    -> Estaciones Automáticas
-                                    completas      -> Estaciones Completas
-                                    pluviometricas -> Estaciones Pluviométricas
-                                    termometricas  -> Estaciones Termométricas
+        :param async_req bool
+        :param str anio: Año (AAAA) (required)
+        :param str decena: Decena de 01 (primera decena) a 36 (última decena) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/productos/climatologicos/capasshape/" + tipoestacion
-        )
 
-    async def resumen_mensual_climatolgico_nacional__documento_(self, anio, mes):
-        """Resumen mensual climatológico nacional (documento).
+        all_params = ['anio', 'decena']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Resumen climatológico nacional, para el año y mes pasado por
-        parámetro, sobre el estado del clima y la evolución de las
-        principales variables climáticas, en especial temperatura y
-        precipitación, a nivel mensual, estacional y anual.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method balance_hdrico_nacional__documento_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'anio' is set
+        if ('anio' not in params or
+                params['anio'] is None):
+            raise ValueError("Missing the required parameter `anio` when calling `balance_hdrico_nacional__documento_`")  # noqa: E501
+        # verify the required parameter 'decena' is set
+        if ('decena' not in params or
+                params['decena'] is None):
+            raise ValueError("Missing the required parameter `decena` when calling `balance_hdrico_nacional__documento_`")  # noqa: E501
 
-        :param str anio: Año (AAAA)
-        :param str mes: Mes (mm)
+        collection_formats = {}
+
+        path_params = {}
+        if 'anio' in params:
+            path_params['anio'] = params['anio']  # noqa: E501
+        if 'decena' in params:
+            path_params['decena'] = params['decena']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/productos/climatologicos/balancehidrico/{anio}/{decena}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def capas_shape_de_estaciones_climatolgicas_(self, tipoestacion, **kwargs):  # noqa: E501
+        """Capas SHAPE de estaciones climatológicas de AEMET.  # noqa: E501
+
+        Capas SHAPE de las distintas estaciones climatológicas de AEMET: automáticas, completas, pluviométricas y termométricas.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.capas_shape_de_estaciones_climatolgicas_(tipoestacion, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str tipoestacion:  | Código | Tipo de Estación | |----------|----------| | automaticas  | Estaciones Automáticas   | | completas  | Estaciones Completas   | | pluviometricas  | Estaciones Pluviométricas   | | termometricas  | Estaciones Termométricas    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/productos/climatologicos/resumenclimatologico/nacional/"
-            + anio
-            + "/"
-            + mes
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.capas_shape_de_estaciones_climatolgicas__with_http_info(tipoestacion, **kwargs)  # noqa: E501
+        else:
+            (data) = self.capas_shape_de_estaciones_climatolgicas__with_http_info(tipoestacion, **kwargs)  # noqa: E501
+            return data
+
+    def capas_shape_de_estaciones_climatolgicas__with_http_info(self, tipoestacion, **kwargs):  # noqa: E501
+        """Capas SHAPE de estaciones climatológicas de AEMET.  # noqa: E501
+
+        Capas SHAPE de las distintas estaciones climatológicas de AEMET: automáticas, completas, pluviométricas y termométricas.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.capas_shape_de_estaciones_climatolgicas__with_http_info(tipoestacion, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str tipoestacion:  | Código | Tipo de Estación | |----------|----------| | automaticas  | Estaciones Automáticas   | | completas  | Estaciones Completas   | | pluviometricas  | Estaciones Pluviométricas   | | termometricas  | Estaciones Termométricas    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['tipoestacion']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method capas_shape_de_estaciones_climatolgicas_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'tipoestacion' is set
+        if ('tipoestacion' not in params or
+                params['tipoestacion'] is None):
+            raise ValueError("Missing the required parameter `tipoestacion` when calling `capas_shape_de_estaciones_climatolgicas_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'tipoestacion' in params:
+            path_params['tipoestacion'] = params['tipoestacion']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/productos/climatologicos/capasshape/{tipoestacion}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def resumen_mensual_climatolgico_nacional__documento_(self, anio, mes, **kwargs):  # noqa: E501
+        """Resumen mensual climatológico nacional (documento).  # noqa: E501
+
+        Resumen climatológico nacional, para el año y mes pasado por parámetro, sobre el estado del clima y la evolución de las principales variables climáticas, en especial temperatura y precipitación, a nivel mensual, estacional y anual.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.resumen_mensual_climatolgico_nacional__documento_(anio, mes, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str anio: Año (AAAA) (required)
+        :param str mes: Mes (mm) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.resumen_mensual_climatolgico_nacional__documento__with_http_info(anio, mes, **kwargs)  # noqa: E501
+        else:
+            (data) = self.resumen_mensual_climatolgico_nacional__documento__with_http_info(anio, mes, **kwargs)  # noqa: E501
+            return data
+
+    def resumen_mensual_climatolgico_nacional__documento__with_http_info(self, anio, mes, **kwargs):  # noqa: E501
+        """Resumen mensual climatológico nacional (documento).  # noqa: E501
+
+        Resumen climatológico nacional, para el año y mes pasado por parámetro, sobre el estado del clima y la evolución de las principales variables climáticas, en especial temperatura y precipitación, a nivel mensual, estacional y anual.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.resumen_mensual_climatolgico_nacional__documento__with_http_info(anio, mes, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str anio: Año (AAAA) (required)
+        :param str mes: Mes (mm) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['anio', 'mes']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method resumen_mensual_climatolgico_nacional__documento_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'anio' is set
+        if ('anio' not in params or
+                params['anio'] is None):
+            raise ValueError("Missing the required parameter `anio` when calling `resumen_mensual_climatolgico_nacional__documento_`")  # noqa: E501
+        # verify the required parameter 'mes' is set
+        if ('mes' not in params or
+                params['mes'] is None):
+            raise ValueError("Missing the required parameter `mes` when calling `resumen_mensual_climatolgico_nacional__documento_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'anio' in params:
+            path_params['anio'] = params['anio']  # noqa: E501
+        if 'mes' in params:
+            path_params['mes'] = params['mes']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/productos/climatologicos/resumenclimatologico/nacional/{anio}/{mes}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
 
 
 class RedRadaresApi(object):
-    """Imagen nacional radares."""
+    """NOTE: This class is auto generated by the swagger code generator program.
 
-    def __init__(self):
-        """Initialize."""
-        self._aemetClient = aemetClient
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
 
-    async def imagen_composicin_nacional_radares__tiempo_actual_estndar_(self):
-        """Imagen composición nacional radares. Tiempo actual estándar.
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
 
-        Imagen composición nacional radares. Tiempo actual estándar.
-        Periodicidad: 30 minutos.
+    def imagen_composicin_nacional_radares__tiempo_actual_estndar_(self, **kwargs):  # noqa: E501
+        """Imagen composición nacional radares. Tiempo actual estándar.  # noqa: E501
+
+        Imagen composición nacional radares. Tiempo actual estándar. Periodicidad: 30 minutos.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.imagen_composicin_nacional_radares__tiempo_actual_estndar_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/red/radar/nacional")
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.imagen_composicin_nacional_radares__tiempo_actual_estndar__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.imagen_composicin_nacional_radares__tiempo_actual_estndar__with_http_info(**kwargs)  # noqa: E501
+            return data
 
-    async def radar_regional(self, radar):
-        """Imagen gráfica radar regional. Tiempo actual estándar.
+    def imagen_composicin_nacional_radares__tiempo_actual_estndar__with_http_info(self, **kwargs):  # noqa: E501
+        """Imagen composición nacional radares. Tiempo actual estándar.  # noqa: E501
 
-        Imagen del radar regional de la región pasada por parámetro.
-        Tiempo actual estándar. Periodicidad: 10 minutos.
+        Imagen composición nacional radares. Tiempo actual estándar. Periodicidad: 30 minutos.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.imagen_composicin_nacional_radares__tiempo_actual_estndar__with_http_info(async_req=True)
+        >>> result = thread.get()
 
-        :param str radar: Código Radar
-                                am -> Almería
-                                sa -> Asturias
-                                pm -> Illes Balears
-                                ba -> Barcelona
-                                cc -> Cáceres
-                                co -> A Coruña
-                                ma -> Madrid
-                                ml -> Málaga
-                                mu -> Murcia
-                                vd -> Palencia
-                                ca -> Las Palmas
-                                se -> Sevilla
-                                va -> Valencia
-                                ss -> Vizcaya
-                                za -> Zaragoza
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/red/radar/regional/" + radar)
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method imagen_composicin_nacional_radares__tiempo_actual_estndar_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/red/radar/nacional', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def radar_regional(self, radar, **kwargs):  # noqa: E501
+        """Imagen gráfica radar regional. Tiempo actual estándar.  # noqa: E501
+
+        Imagen del radar regional de la región pasada por parámetro. Tiempo actual estándar. Periodicidad: 10 minutos.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.radar_regional(radar, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str radar:  | Código | Radar | |----------|----------| | am  | Almería   | | sa  | Asturias   | | pm  | Illes Balears   | | ba  | Barcelona  | | cc  | Cáceres   | | co  | A Coruña   | | ma  | Madrid   | | ml  | Málaga   | | mu  | Murcia   | | vd  | Palencia   | | ca  | Las Palmas   | | se  | Sevilla   | | va  | Valencia   | | ss  | Vizcaya   | | za  | Zaragoza    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.radar_regional_with_http_info(radar, **kwargs)  # noqa: E501
+        else:
+            (data) = self.radar_regional_with_http_info(radar, **kwargs)  # noqa: E501
+            return data
+
+    def radar_regional_with_http_info(self, radar, **kwargs):  # noqa: E501
+        """Imagen gráfica radar regional. Tiempo actual estándar.  # noqa: E501
+
+        Imagen del radar regional de la región pasada por parámetro. Tiempo actual estándar. Periodicidad: 10 minutos.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.radar_regional_with_http_info(radar, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str radar:  | Código | Radar | |----------|----------| | am  | Almería   | | sa  | Asturias   | | pm  | Illes Balears   | | ba  | Barcelona  | | cc  | Cáceres   | | co  | A Coruña   | | ma  | Madrid   | | ml  | Málaga   | | mu  | Murcia   | | vd  | Palencia   | | ca  | Las Palmas   | | se  | Sevilla   | | va  | Valencia   | | ss  | Vizcaya   | | za  | Zaragoza    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['radar']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method radar_regional" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'radar' is set
+        if ('radar' not in params or
+                params['radar'] is None):
+            raise ValueError("Missing the required parameter `radar` when calling `radar_regional`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'radar' in params:
+            path_params['radar'] = params['radar']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/red/radar/regional/{radar}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
 
 
 class RedRayosApi(object):
-    """Mapa con los rayos."""
+    """NOTE: This class is auto generated by the swagger code generator program.
 
-    def __init__(self):
-        """Initialize."""
-        self._aemetClient = aemetClient
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
 
-    async def mapa_con_los_rayos_registrados_en_periodo_standard__ltimo_elaborado_(
-        self,
-    ):
-        """Mapa con los rayos registrados en periodo standard. Último elaborado.
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
 
-        Imagen de las descargas caídas en el territorio nacional durante un
-        período de 12 horas.
+    def mapa_con_los_rayos_registrados_en_periodo_standard__ltimo_elaborado_(self, **kwargs):  # noqa: E501
+        """Mapa con los rayos registrados en periodo standard. Último elaborado.  # noqa: E501
+
+        Imagen de las descargas caídas en el territorio nacional durante un período de 12 horas.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapa_con_los_rayos_registrados_en_periodo_standard__ltimo_elaborado_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/red/rayos/mapa")
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.mapa_con_los_rayos_registrados_en_periodo_standard__ltimo_elaborado__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.mapa_con_los_rayos_registrados_en_periodo_standard__ltimo_elaborado__with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def mapa_con_los_rayos_registrados_en_periodo_standard__ltimo_elaborado__with_http_info(self, **kwargs):  # noqa: E501
+        """Mapa con los rayos registrados en periodo standard. Último elaborado.  # noqa: E501
+
+        Imagen de las descargas caídas en el territorio nacional durante un período de 12 horas.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.mapa_con_los_rayos_registrados_en_periodo_standard__ltimo_elaborado__with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method mapa_con_los_rayos_registrados_en_periodo_standard__ltimo_elaborado_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/red/rayos/mapa', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
 
 
 class RedesEspecialesApi(object):
-    """Redes especiales."""
+    """NOTE: This class is auto generated by the swagger code generator program.
 
-    def __init__(self):
-        """Initialize."""
-        self._aemetClient = aemetClient
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
 
-    async def contenido_total_de_ozono__tiempo_actual_(self):
-        """Contenido total de ozono. Tiempo actual.
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
 
-        Dato medio diario de contenido total de ozono.
-        Cada 24 h (actualmente, en fines de semana, festivos y vacaciones
-        no se genera por la falta de personal en
-        el Centro Radiométrico Nacional).
+    def contenido_total_de_ozono__tiempo_actual_(self, **kwargs):  # noqa: E501
+        """Contenido total de ozono. Tiempo actual.  # noqa: E501
+
+        Dato medio diario de contenido total de ozono. Cada 24 h (actualmente, en fines de semana, festivos y vacaciones no se genera por la falta de personal en el Centro Radiométrico Nacional).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.contenido_total_de_ozono__tiempo_actual_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/red/especial/ozono")
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.contenido_total_de_ozono__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.contenido_total_de_ozono__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+            return data
 
-    async def datos_de_contaminacin_de_fondo__tiempo_actual_(self, nombre_estacion):
-        """Datos de contaminación de fondo. Tiempo actual.
+    def contenido_total_de_ozono__tiempo_actual__with_http_info(self, **kwargs):  # noqa: E501
+        """Contenido total de ozono. Tiempo actual.  # noqa: E501
 
-        Ficheros diarios con datos diezminutales de la estación de la red
-        de contaminación de fondo EMEP/VAG/CAMP pasada por parámetro,
-        de temperatura, presión, humedad, viento (dirección y velocidad),
-        radiación global, precipitación y 4 componentes
-        químicos: O3,SO2,NO,NO2 y PM10. Los datos se encuentran en
-        formato FINN (propio del Ministerio de Medio Ambiente).
-        Periodicidad: cada hora.
+        Dato medio diario de contenido total de ozono. Cada 24 h (actualmente, en fines de semana, festivos y vacaciones no se genera por la falta de personal en el Centro Radiométrico Nacional).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.contenido_total_de_ozono__tiempo_actual__with_http_info(async_req=True)
+        >>> result = thread.get()
 
-        :param str nombre_estacion: Código Estación de la Red EMEP
-                                        11 -> Barcarrota (Badajoz)
-                                        10 -> Cabo de Creus (Girona)
-                                        09 -> Campisábalos (Guadalajara)
-                                        17 -> Doñana (Huelva)
-                                        14 -> Els Torms (Lleida)
-                                        06 -> Mahón (Illes Balears)
-                                        08 -> Niembro-Llanes (Asturias)
-                                        05 -> Noia (A Coruña)
-                                        16 -> O Saviñao (Lugo)
-                                        13 -> Peñausende (Zamora)
-                                        01 -> San Pablo de los Montes (Toledo)
-                                        07 -> Víznar (Granada)
-                                        12 -> Zarra (Valencia)
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/red/especial/contaminacionfondo/estacion/" + nombre_estacion
-        )
 
-    async def datos_de_radiacin_global_directa_o_difusa__tiempo_actual_(self):
-        """Datos de radiación global, directa o difusa. Tiempo actual.
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Datos horarios (HORA SOLAR VERDADERA) acumulados de radiación global,
-        directa, difusa e infrarroja, y datos
-        semihorarios (HORA SOLAR VERDADERA) acumulados de radiación
-        ultravioleta eritemática.Datos diarios acumulados de radiación global,
-        directa, difusa, ultravioleta eritemática e infrarroja.
-        Periodicidad: Cada 24h (actualmente en fines de semana, festivos y
-        vacaciones, no se genera por la ausencia de personal en
-        el Centro Radiométrico Nacional).
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method contenido_total_de_ozono__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/red/especial/ozono', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def datos_de_contaminacin_de_fondo__tiempo_actual_(self, nombre_estacion, **kwargs):  # noqa: E501
+        """Datos de contaminación de fondo. Tiempo actual.  # noqa: E501
+
+        Ficheros diarios con datos diezminutales de la estación de la red de contaminación de fondo EMEP/VAG/CAMP pasada por parámetro, de temperatura, presión, humedad, viento (dirección y velocidad), radiación global, precipitación y 4 componentes químicos: O3,SO2,NO,NO2 y PM10. Los datos se encuentran en formato FINN (propio del Ministerio de Medio Ambiente). Periodicidad: cada hora.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.datos_de_contaminacin_de_fondo__tiempo_actual_(nombre_estacion, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str nombre_estacion:  | Código | Estación de la Red EMEP | |----------|----------| | 11  | Barcarrota (Badajoz)   | | 10  | Cabo de Creus (Girona)   | | 09  | Campisábalos (Guadalajara)   | | 17  | Doñana (Huelva)  | | 14  | Els Torms (Lleida)   | | 06  | Mahón (Illes Balears)   | | 08  | Niembro-Llanes (Asturias)   | | 05  | Noia (A Coruña)   | | 16  | O Saviñao (Lugo)   | | 13  | Peñausende (Zamora)   | | 01  | San Pablo de los Montes (Toledo)   | | 07  | Víznar (Granada)   | | 12  | Zarra (Valencia)  (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request("/api/red/especial/radiacion")
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.datos_de_contaminacin_de_fondo__tiempo_actual__with_http_info(nombre_estacion, **kwargs)  # noqa: E501
+        else:
+            (data) = self.datos_de_contaminacin_de_fondo__tiempo_actual__with_http_info(nombre_estacion, **kwargs)  # noqa: E501
+            return data
 
-    async def perfiles_verticales_de_ozono__tiempo_actual_(self, estacion):
-        """Perfiles verticales de ozono. Tiempo actual.
+    def datos_de_contaminacin_de_fondo__tiempo_actual__with_http_info(self, nombre_estacion, **kwargs):  # noqa: E501
+        """Datos de contaminación de fondo. Tiempo actual.  # noqa: E501
 
-        Perfil Vertical de Ozono de la estación pasada por parámetro.
-        Periodicidad: cada 7 días.
+        Ficheros diarios con datos diezminutales de la estación de la red de contaminación de fondo EMEP/VAG/CAMP pasada por parámetro, de temperatura, presión, humedad, viento (dirección y velocidad), radiación global, precipitación y 4 componentes químicos: O3,SO2,NO,NO2 y PM10. Los datos se encuentran en formato FINN (propio del Ministerio de Medio Ambiente). Periodicidad: cada hora.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.datos_de_contaminacin_de_fondo__tiempo_actual__with_http_info(nombre_estacion, async_req=True)
+        >>> result = thread.get()
 
-        :param str estacion: Código Estación
-                                canarias  -> Izaña
-                                peninsula -> Madrid
+        :param async_req bool
+        :param str nombre_estacion:  | Código | Estación de la Red EMEP | |----------|----------| | 11  | Barcarrota (Badajoz)   | | 10  | Cabo de Creus (Girona)   | | 09  | Campisábalos (Guadalajara)   | | 17  | Doñana (Huelva)  | | 14  | Els Torms (Lleida)   | | 06  | Mahón (Illes Balears)   | | 08  | Niembro-Llanes (Asturias)   | | 05  | Noia (A Coruña)   | | 16  | O Saviñao (Lugo)   | | 13  | Peñausende (Zamora)   | | 01  | San Pablo de los Montes (Toledo)   | | 07  | Víznar (Granada)   | | 12  | Zarra (Valencia)  (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/red/especial/perfilozono/estacion/" + estacion
-        )
+
+        all_params = ['nombre_estacion']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method datos_de_contaminacin_de_fondo__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'nombre_estacion' is set
+        if ('nombre_estacion' not in params or
+                params['nombre_estacion'] is None):
+            raise ValueError("Missing the required parameter `nombre_estacion` when calling `datos_de_contaminacin_de_fondo__tiempo_actual_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'nombre_estacion' in params:
+            path_params['nombre_estacion'] = params['nombre_estacion']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/red/especial/contaminacionfondo/estacion/{nombre_estacion}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def datos_de_radiacin_global_directa_o_difusa__tiempo_actual_(self, **kwargs):  # noqa: E501
+        """Datos de radiación global, directa o difusa. Tiempo actual.  # noqa: E501
+
+        Datos horarios (HORA SOLAR VERDADERA) acumulados de radiación  global, directa, difusa e infrarroja, y datos semihorarios  (HORA SOLAR VERDADERA) acumulados de radiación ultravioleta eritemática.Datos diarios acumulados  de radiación global, directa, difusa, ultravioleta eritemática e infrarroja. Periodicidad: Cada 24h (actualmente en fines de semana, festivos y vacaciones, no se genera por la ausencia de personal en el Centro Radiométrico Nacional).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.datos_de_radiacin_global_directa_o_difusa__tiempo_actual_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.datos_de_radiacin_global_directa_o_difusa__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.datos_de_radiacin_global_directa_o_difusa__tiempo_actual__with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def datos_de_radiacin_global_directa_o_difusa__tiempo_actual__with_http_info(self, **kwargs):  # noqa: E501
+        """Datos de radiación global, directa o difusa. Tiempo actual.  # noqa: E501
+
+        Datos horarios (HORA SOLAR VERDADERA) acumulados de radiación  global, directa, difusa e infrarroja, y datos semihorarios  (HORA SOLAR VERDADERA) acumulados de radiación ultravioleta eritemática.Datos diarios acumulados  de radiación global, directa, difusa, ultravioleta eritemática e infrarroja. Periodicidad: Cada 24h (actualmente en fines de semana, festivos y vacaciones, no se genera por la ausencia de personal en el Centro Radiométrico Nacional).  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.datos_de_radiacin_global_directa_o_difusa__tiempo_actual__with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method datos_de_radiacin_global_directa_o_difusa__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/red/especial/radiacion', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def perfiles_verticales_de_ozono__tiempo_actual_(self, estacion, **kwargs):  # noqa: E501
+        """Perfiles verticales de ozono. Tiempo actual.  # noqa: E501
+
+        Perfil Vertical de Ozono de la estación pasada por parámetro. Periodicidad: cada 7 días.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.perfiles_verticales_de_ozono__tiempo_actual_(estacion, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str estacion:  | Código | Estación | |----------|----------| | canarias  | Izaña   | | peninsula  | Madrid    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.perfiles_verticales_de_ozono__tiempo_actual__with_http_info(estacion, **kwargs)  # noqa: E501
+        else:
+            (data) = self.perfiles_verticales_de_ozono__tiempo_actual__with_http_info(estacion, **kwargs)  # noqa: E501
+            return data
+
+    def perfiles_verticales_de_ozono__tiempo_actual__with_http_info(self, estacion, **kwargs):  # noqa: E501
+        """Perfiles verticales de ozono. Tiempo actual.  # noqa: E501
+
+        Perfil Vertical de Ozono de la estación pasada por parámetro. Periodicidad: cada 7 días.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.perfiles_verticales_de_ozono__tiempo_actual__with_http_info(estacion, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str estacion:  | Código | Estación | |----------|----------| | canarias  | Izaña   | | peninsula  | Madrid    (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['estacion']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method perfiles_verticales_de_ozono__tiempo_actual_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'estacion' is set
+        if ('estacion' not in params or
+                params['estacion'] is None):
+            raise ValueError("Missing the required parameter `estacion` when calling `perfiles_verticales_de_ozono__tiempo_actual_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'estacion' in params:
+            path_params['estacion'] = params['estacion']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/red/especial/perfilozono/estacion/{estacion}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+# coding: utf-8
+
+"""
+    AEMET OpenData
+
+    AEMET OpenData es una API REST desarrollado por AEMET que permite la difusión y la reutilización de la información meteorológica y climatológica de la Agencia, en el sentido indicado en la Ley 18/2015, de 9 de julio, por la que se modifica la Ley 37/2007, de 16 de noviembre, sobre reutilización de la información del sector público. (IMPORTANTE: Para poder realizar peticiones, es necesario introducir en API Key haciendo clic en el círculo rojo de recurso REST).  # noqa: E501
+
+    OpenAPI spec version: 2.0
+    
+    Generated by: https://github.com/swagger-api/swagger-codegen.git
+"""
+
+
+from __future__ import absolute_import
+
+import re  # noqa: F401
+
+# python 2 and python 3 compatibility library
+import six
+
+from swagger_client.api_client import ApiClient
 
 
 class ValoresClimatologicosApi(object):
-    """Valores climatológicos."""
+    """NOTE: This class is auto generated by the swagger code generator program.
 
-    def __init__(self):
-        """Initialize."""
-        self._aemetClient = aemetClient
+    Do not edit the class manually.
+    Ref: https://github.com/swagger-api/swagger-codegen
+    """
 
-    async def climatologas_diarias_(self, fechaIniStr, fechaFinStr, idema):
-        """Climatologías diarias.
+    def __init__(self, api_client=None):
+        if api_client is None:
+            api_client = ApiClient()
+        self.api_client = api_client
 
-        Valores climatológicos para el rango de fechas y la estación
-        seleccionada.
-        Periodicidad: 1 vez al día.
+    def climatologas_diarias_(self, fecha_ini_str, fecha_fin_str, idema, **kwargs):  # noqa: E501
+        """Climatologías diarias.  # noqa: E501
 
-        :param str fechaIniStr: Fecha Inicial (AAAA-MM-DDTHH:MM:SSUTC)
-        :param str fechaFinStr: Fecha Final (AAAA-MM-DDTHH:MM:SSUTC)
-        :param str idema: Indicativo climatológico de la EMA.
-                                Puede introducir varios indicativos separados por comas (,)
+        Valores climatológicos para el rango de fechas y la estación seleccionada. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.climatologas_diarias_(fecha_ini_str, fecha_fin_str, idema, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha_ini_str: Fecha Inicial (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :param str fecha_fin_str: Fecha Final (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :param str idema: Indicativo climatológico de la EMA. Puede introducir varios indicativos separados por comas (,) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/valores/climatologicos/diarios/datos/fechaini/"
-            + fechaIniStr
-            + "/fechafin/"
-            + fechaFinStr
-            + "/estacion/"
-            + idema
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.climatologas_diarias__with_http_info(fecha_ini_str, fecha_fin_str, idema, **kwargs)  # noqa: E501
+        else:
+            (data) = self.climatologas_diarias__with_http_info(fecha_ini_str, fecha_fin_str, idema, **kwargs)  # noqa: E501
+            return data
 
-    async def climatologas_diarias_1(self, fechaIniStr, fechaFinStr):
-        """Climatologías diarias.
+    def climatologas_diarias__with_http_info(self, fecha_ini_str, fecha_fin_str, idema, **kwargs):  # noqa: E501
+        """Climatologías diarias.  # noqa: E501
 
-        Valores climatológicos de todas las estaciones para el rango de
-        fechas seleccionado.
-        Periodicidad: 1 vez al día.
+        Valores climatológicos para el rango de fechas y la estación seleccionada. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.climatologas_diarias__with_http_info(fecha_ini_str, fecha_fin_str, idema, async_req=True)
+        >>> result = thread.get()
 
-        :param str fechaIniStr: Fecha Inicial (AAAA-MM-DDTHH:MM:SSUTC)
-        :param str fechafin: Fecha Final (AAAA-MM-DDTHH:MM:SSUTC)
+        :param async_req bool
+        :param str fecha_ini_str: Fecha Inicial (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :param str fecha_fin_str: Fecha Final (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :param str idema: Indicativo climatológico de la EMA. Puede introducir varios indicativos separados por comas (,) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/valores/climatologicos/diarios/datos/fechaini/"
-            + fechaIniStr
-            + "/fechafin/"
-            + fechaFinStr
-            + "/todasestaciones"
-        )
 
-    async def climatologas_mensuales_anuales_(self, anioIniStr, anioFinStr, idema):
-        """Climatologías mensuales anuales.
+        all_params = ['fecha_ini_str', 'fecha_fin_str', 'idema']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Valores medios mensuales y anuales de los datos climatológicos para
-        la estación y el periodo de años pasados por parámetro.
-        Periodicidad: 1 vez al día.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method climatologas_diarias_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'fecha_ini_str' is set
+        if ('fecha_ini_str' not in params or
+                params['fecha_ini_str'] is None):
+            raise ValueError("Missing the required parameter `fecha_ini_str` when calling `climatologas_diarias_`")  # noqa: E501
+        # verify the required parameter 'fecha_fin_str' is set
+        if ('fecha_fin_str' not in params or
+                params['fecha_fin_str'] is None):
+            raise ValueError("Missing the required parameter `fecha_fin_str` when calling `climatologas_diarias_`")  # noqa: E501
+        # verify the required parameter 'idema' is set
+        if ('idema' not in params or
+                params['idema'] is None):
+            raise ValueError("Missing the required parameter `idema` when calling `climatologas_diarias_`")  # noqa: E501
 
-        :param str anioIniStr: Año Inicial (AAAA)
-        :param str anioFinStr: Año Final (AAAA)
-        :param str idema: Indicativo climatológico de la EMA
+        collection_formats = {}
+
+        path_params = {}
+        if 'fecha_ini_str' in params:
+            path_params['fechaIniStr'] = params['fecha_ini_str']  # noqa: E501
+        if 'fecha_fin_str' in params:
+            path_params['fechaFinStr'] = params['fecha_fin_str']  # noqa: E501
+        if 'idema' in params:
+            path_params['idema'] = params['idema']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/valores/climatologicos/diarios/datos/fechaini/{fechaIniStr}/fechafin/{fechaFinStr}/estacion/{idema}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def climatologas_diarias_1(self, fecha_ini_str, fecha_fin_str, **kwargs):  # noqa: E501
+        """Climatologías diarias.  # noqa: E501
+
+        Valores climatológicos de todas las estaciones para el rango de fechas seleccionado. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.climatologas_diarias_1(fecha_ini_str, fecha_fin_str, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str fecha_ini_str: Fecha Inicial (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :param str fecha_fin_str: Fecha Final (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/valores/climatologicos/mensualesanuales/datos/anioini/"
-            + anioIniStr
-            + "/aniofin/"
-            + anioFinStr
-            + "/estacion/"
-            + idema
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.climatologas_diarias_1_with_http_info(fecha_ini_str, fecha_fin_str, **kwargs)  # noqa: E501
+        else:
+            (data) = self.climatologas_diarias_1_with_http_info(fecha_ini_str, fecha_fin_str, **kwargs)  # noqa: E501
+            return data
 
-    async def climatologas_normales__19812010_(self, idema):
-        """Climatologías normales (1981-2010).
+    def climatologas_diarias_1_with_http_info(self, fecha_ini_str, fecha_fin_str, **kwargs):  # noqa: E501
+        """Climatologías diarias.  # noqa: E501
 
-        Valores climatológicos normales (periodo 1981-2010) para la estación
-        pasada por parámetro.
-        Periodicidad: 1 vez al día.
+        Valores climatológicos de todas las estaciones para el rango de fechas seleccionado. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.climatologas_diarias_1_with_http_info(fecha_ini_str, fecha_fin_str, async_req=True)
+        >>> result = thread.get()
 
-        :param str idema: Indicativo climatológico de la EMA
+        :param async_req bool
+        :param str fecha_ini_str: Fecha Inicial (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :param str fecha_fin_str: Fecha Final (AAAA-MM-DDTHH:MM:SSUTC) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/valores/climatologicos/normales/estacion/" + idema
-        )
 
-    async def estaciones_por_indicativo_(self, estaciones):
-        """Estaciones por indicativo.
+        all_params = ['fecha_ini_str', 'fecha_fin_str']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Características de la estación climatológica pasada por parámetro.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method climatologas_diarias_1" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'fecha_ini_str' is set
+        if ('fecha_ini_str' not in params or
+                params['fecha_ini_str'] is None):
+            raise ValueError("Missing the required parameter `fecha_ini_str` when calling `climatologas_diarias_1`")  # noqa: E501
+        # verify the required parameter 'fecha_fin_str' is set
+        if ('fecha_fin_str' not in params or
+                params['fecha_fin_str'] is None):
+            raise ValueError("Missing the required parameter `fecha_fin_str` when calling `climatologas_diarias_1`")  # noqa: E501
 
-        :param str estaciones: Listado de indicativos climatológicos (id1,id2,id3,...,idn)
+        collection_formats = {}
+
+        path_params = {}
+        if 'fecha_ini_str' in params:
+            path_params['fechaIniStr'] = params['fecha_ini_str']  # noqa: E501
+        if 'fecha_fin_str' in params:
+            path_params['fechaFinStr'] = params['fecha_fin_str']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/valores/climatologicos/diarios/datos/fechaini/{fechaIniStr}/fechafin/{fechaFinStr}/todasestaciones', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def climatologas_mensuales_anuales_(self, anio_ini_str, anio_fin_str, idema, **kwargs):  # noqa: E501
+        """Climatologías mensuales anuales.  # noqa: E501
+
+        Valores medios mensuales y anuales de los datos climatológicos para la estación y el periodo de años pasados por parámetro. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.climatologas_mensuales_anuales_(anio_ini_str, anio_fin_str, idema, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str anio_ini_str: Año Inicial (AAAA) (required)
+        :param str anio_fin_str: Año Final (AAAA) (required)
+        :param str idema: Indicativo climatológico de la EMA (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/valores/climatologicos/inventarioestaciones/estaciones/" + estaciones
-        )
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.climatologas_mensuales_anuales__with_http_info(anio_ini_str, anio_fin_str, idema, **kwargs)  # noqa: E501
+        else:
+            (data) = self.climatologas_mensuales_anuales__with_http_info(anio_ini_str, anio_fin_str, idema, **kwargs)  # noqa: E501
+            return data
 
-    async def inventario_de_estaciones__valores_climatolgicos_(self):
-        """Inventario de estaciones (valores climatológicos).
+    def climatologas_mensuales_anuales__with_http_info(self, anio_ini_str, anio_fin_str, idema, **kwargs):  # noqa: E501
+        """Climatologías mensuales anuales.  # noqa: E501
 
-        Inventario con las características de todas las estaciones
-        climatológicas.
-        Periodicidad: 1 vez al día.
+        Valores medios mensuales y anuales de los datos climatológicos para la estación y el periodo de años pasados por parámetro. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.climatologas_mensuales_anuales__with_http_info(anio_ini_str, anio_fin_str, idema, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str anio_ini_str: Año Inicial (AAAA) (required)
+        :param str anio_fin_str: Año Final (AAAA) (required)
+        :param str idema: Indicativo climatológico de la EMA (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/valores/climatologicos/inventarioestaciones/todasestaciones"
-        )
 
-    async def valores_extremos_(self, parametro, idema):
-        """Valores extremos.
+        all_params = ['anio_ini_str', 'anio_fin_str', 'idema']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-        Valores extremos para la estación y la variable (precipitación,
-        temperatura y viento) pasadas por parámetro.
-        Periodicidad: 1 vez al día.
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method climatologas_mensuales_anuales_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'anio_ini_str' is set
+        if ('anio_ini_str' not in params or
+                params['anio_ini_str'] is None):
+            raise ValueError("Missing the required parameter `anio_ini_str` when calling `climatologas_mensuales_anuales_`")  # noqa: E501
+        # verify the required parameter 'anio_fin_str' is set
+        if ('anio_fin_str' not in params or
+                params['anio_fin_str'] is None):
+            raise ValueError("Missing the required parameter `anio_fin_str` when calling `climatologas_mensuales_anuales_`")  # noqa: E501
+        # verify the required parameter 'idema' is set
+        if ('idema' not in params or
+                params['idema'] is None):
+            raise ValueError("Missing the required parameter `idema` when calling `climatologas_mensuales_anuales_`")  # noqa: E501
 
-        :param str parametro: Código Parámetro Meteorológico
-                                    P -> Precipitación
-                                    T -> Temperatura
-                                    V -> Viento
-        :param str idema: Indicativo climatológico de la EMA
+        collection_formats = {}
+
+        path_params = {}
+        if 'anio_ini_str' in params:
+            path_params['anioIniStr'] = params['anio_ini_str']  # noqa: E501
+        if 'anio_fin_str' in params:
+            path_params['anioFinStr'] = params['anio_fin_str']  # noqa: E501
+        if 'idema' in params:
+            path_params['idema'] = params['idema']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/valores/climatologicos/mensualesanuales/datos/anioini/{anioIniStr}/aniofin/{anioFinStr}/estacion/{idema}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def climatologas_normales__19812010_(self, idema, **kwargs):  # noqa: E501
+        """Climatologías normales (1981-2010).  # noqa: E501
+
+        Valores climatológicos normales (periodo 1981-2010) para la estación pasada por parámetro. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.climatologas_normales__19812010_(idema, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str idema: Indicativo climatológico de la EMA (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
         """
-        return self._aemetClient.request(
-            "/api/valores/climatologicos/valoresextremos/parametro/"
-            + parametro
-            + "/estacion/"
-            + idema
-        )
-        
-        """ Example client: 
-        import http.client
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.climatologas_normales__19812010__with_http_info(idema, **kwargs)  # noqa: E501
+        else:
+            (data) = self.climatologas_normales__19812010__with_http_info(idema, **kwargs)  # noqa: E501
+            return data
 
-conn = http.client.HTTPSConnection("opendata.aemet.es")
+    def climatologas_normales__19812010__with_http_info(self, idema, **kwargs):  # noqa: E501
+        """Climatologías normales (1981-2010).  # noqa: E501
 
-headers = {
-    'cache-control': "no-cache"
-    }
+        Valores climatológicos normales (periodo 1981-2010) para la estación pasada por parámetro. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.climatologas_normales__19812010__with_http_info(idema, async_req=True)
+        >>> result = thread.get()
 
-conn.request("GET", "/opendata/api/valores/climatologicos/inventarioestaciones/todasestaciones/?api_key=jyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqbW9udGVyb2dAYWVtZXQuZXMiLCJqdGkiOiI3NDRiYmVhMy02NDEyLTQxYWMtYmYzOC01MjhlZWJlM2FhMWEiLCJleHAiOjE0NzUwNTg3ODcsImlzcyI6IkFFTUVUIiwiaWF0IjoxNDc0NjI2Nzg3LCJ1c2VySWQiOiI3NDRiYmVhMy02NDEyLTQxYWMtYmYzOC01MjhlZWJlM2FhMWEiLCJyb2xlIjoiIn0.xh3LstTlsP9h5cxz3TLmYF4uJwhOKzA0B6-vH8lPGGw", headers=headers)
+        :param async_req bool
+        :param str idema: Indicativo climatológico de la EMA (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
 
-res = conn.getresponse()
-data = res.read()
+        all_params = ['idema']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
 
-print(data.decode("utf-8"))
-"""
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method climatologas_normales__19812010_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'idema' is set
+        if ('idema' not in params or
+                params['idema'] is None):
+            raise ValueError("Missing the required parameter `idema` when calling `climatologas_normales__19812010_`")  # noqa: E501
 
-""" Example request:
-import requests
+        collection_formats = {}
 
-url = "https://opendata.aemet.es/opendata/api/valores/climatologicos/inventarioestaciones/todasestaciones/"
+        path_params = {}
+        if 'idema' in params:
+            path_params['idema'] = params['idema']  # noqa: E501
 
-querystring = {"api_key":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqbW9udGVyb2dAYWVtZXQuZXMiLCJqdGkiOiI3NDRiYmVhMy02NDEyLTQxYWMtYmYzOC01MjhlZWJlM2FhMWEiLCJleHAiOjE0NzUwNTg3ODcsImlzcyI6IkFFTUVUIiwiaWF0IjoxNDc0NjI2Nzg3LCJ1c2VySWQiOiI3NDRiYmVhMy02NDEyLTQxYWMtYmYzOC01MjhlZWJlM2FhMWEiLCJyb2xlIjoiIn0.xh3LstTlsP9h5cxz3TLmYF4uJwhOKzA0B6-vH8lPGGw"}
+        query_params = []
 
-headers = {
-    'cache-control': "no-cache"
-    }
+        header_params = {}
 
-response = requests.request("GET", url, headers=headers, params=querystring)
+        form_params = []
+        local_var_files = {}
 
-print(response.text)
-"""
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/valores/climatologicos/normales/estacion/{idema}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def estaciones_por_indicativo_(self, estaciones, **kwargs):  # noqa: E501
+        """Estaciones por indicativo.  # noqa: E501
+
+        Características de la estación climatológica pasada por parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.estaciones_por_indicativo_(estaciones, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str estaciones: Listado de indicativos climatológicos (id1,id2,id3,...,idn) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.estaciones_por_indicativo__with_http_info(estaciones, **kwargs)  # noqa: E501
+        else:
+            (data) = self.estaciones_por_indicativo__with_http_info(estaciones, **kwargs)  # noqa: E501
+            return data
+
+    def estaciones_por_indicativo__with_http_info(self, estaciones, **kwargs):  # noqa: E501
+        """Estaciones por indicativo.  # noqa: E501
+
+        Características de la estación climatológica pasada por parámetro.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.estaciones_por_indicativo__with_http_info(estaciones, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str estaciones: Listado de indicativos climatológicos (id1,id2,id3,...,idn) (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['estaciones']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method estaciones_por_indicativo_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'estaciones' is set
+        if ('estaciones' not in params or
+                params['estaciones'] is None):
+            raise ValueError("Missing the required parameter `estaciones` when calling `estaciones_por_indicativo_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'estaciones' in params:
+            path_params['estaciones'] = params['estaciones']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/valores/climatologicos/inventarioestaciones/estaciones/{estaciones}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def inventario_de_estaciones__valores_climatolgicos_(self, **kwargs):  # noqa: E501
+        """Inventario de estaciones (valores climatológicos).  # noqa: E501
+
+        Inventario con las características de todas las estaciones climatológicas. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.inventario_de_estaciones__valores_climatolgicos_(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.inventario_de_estaciones__valores_climatolgicos__with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.inventario_de_estaciones__valores_climatolgicos__with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def inventario_de_estaciones__valores_climatolgicos__with_http_info(self, **kwargs):  # noqa: E501
+        """Inventario de estaciones (valores climatológicos).  # noqa: E501
+
+        Inventario con las características de todas las estaciones climatológicas. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.inventario_de_estaciones__valores_climatolgicos__with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method inventario_de_estaciones__valores_climatolgicos_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/valores/climatologicos/inventarioestaciones/todasestaciones', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def valores_extremos_(self, parametro, idema, **kwargs):  # noqa: E501
+        """Valores extremos.  # noqa: E501
+
+        Valores extremos para la estación y la variable (precipitación, temperatura y viento) pasadas por parámetro. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.valores_extremos_(parametro, idema, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str parametro:  | Código | Parámetro Meteorológico | |----------|----------| | P  | Precipitación   | | T  | Temperatura   | | V  | Viento  (required)
+        :param str idema: Indicativo climatológico de la EMA (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.valores_extremos__with_http_info(parametro, idema, **kwargs)  # noqa: E501
+        else:
+            (data) = self.valores_extremos__with_http_info(parametro, idema, **kwargs)  # noqa: E501
+            return data
+
+    def valores_extremos__with_http_info(self, parametro, idema, **kwargs):  # noqa: E501
+        """Valores extremos.  # noqa: E501
+
+        Valores extremos para la estación y la variable (precipitación, temperatura y viento) pasadas por parámetro. Periodicidad: 1 vez al día.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.valores_extremos__with_http_info(parametro, idema, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str parametro:  | Código | Parámetro Meteorológico | |----------|----------| | P  | Precipitación   | | T  | Temperatura   | | V  | Viento  (required)
+        :param str idema: Indicativo climatológico de la EMA (required)
+        :return: Model200
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['parametro', 'idema']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method valores_extremos_" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'parametro' is set
+        if ('parametro' not in params or
+                params['parametro'] is None):
+            raise ValueError("Missing the required parameter `parametro` when calling `valores_extremos_`")  # noqa: E501
+        # verify the required parameter 'idema' is set
+        if ('idema' not in params or
+                params['idema'] is None):
+            raise ValueError("Missing the required parameter `idema` when calling `valores_extremos_`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'parametro' in params:
+            path_params['parametro'] = params['parametro']  # noqa: E501
+        if 'idema' in params:
+            path_params['idema'] = params['idema']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['api_key']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/api/valores/climatologicos/valoresextremos/parametro/{parametro}/estacion/{idema}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='Model200',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
