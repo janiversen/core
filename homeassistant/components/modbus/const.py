@@ -91,3 +91,6 @@ CONF_STATE_CLOSING = "state_closing"
 CONF_STATUS_REGISTER = "status_register"
 CONF_STATUS_REGISTER_TYPE = "status_register_type"
 DEFAULT_SLAVE = 1
+
+# light.py
+CONF_LIGHT = "light"

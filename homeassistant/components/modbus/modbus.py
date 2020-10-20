@@ -10,6 +10,7 @@ from homeassistant.const import (
     CONF_COVERS,
     CONF_DELAY,
     CONF_HOST,
+    CONF_LIGHTS,
     CONF_METHOD,
     CONF_NAME,
     CONF_PORT,
@@ -29,6 +30,7 @@ from .const import (
     CONF_CLIMATE,
     CONF_CLIMATES,
     CONF_COVER,
+    CONF_LIGHT,
     CONF_PARITY,
     CONF_STOPBITS,
     MODBUS_DOMAIN as DOMAIN,
@@ -56,6 +58,7 @@ def modbus_setup(
         for component, conf_key in (
             (CONF_CLIMATE, CONF_CLIMATES),
             (CONF_COVER, CONF_COVERS),
+            (CONF_LIGHT, CONF_LIGHTS),
         ):
             if conf_key in conf_hub:
                 load_platform(hass, component, DOMAIN, conf_hub, config)

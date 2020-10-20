@@ -8,10 +8,13 @@ from homeassistant.components.cover import (
 )
 from homeassistant.const import (
     ATTR_STATE,
+    CONF_COMMAND_OFF,
+    CONF_COMMAND_ON,
     CONF_COVERS,
     CONF_DELAY,
     CONF_DEVICE_CLASS,
     CONF_HOST,
+    CONF_LIGHTS,
     CONF_METHOD,
     CONF_NAME,
     CONF_PORT,
@@ -56,6 +59,7 @@ from .const import (
     CONF_STOPBITS,
     CONF_TARGET_TEMP,
     CONF_UNIT,
+    CONF_VERIFY_STATE,
     DATA_TYPE_CUSTOM,
     DATA_TYPE_FLOAT,
     DATA_TYPE_INT,
@@ -125,6 +129,28 @@ COVERS_SCHEMA = vol.All(
     ),
 )
 
+SWITCH_BASE_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_NAME): cv.string,
+        vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.All(
+            cv.time_period, lambda value: value.total_seconds()
+        ),
+        vol.Optional(CONF_COMMAND_ON, default=1): cv.positive_int,
+        vol.Optional(CONF_COMMAND_OFF, default=0): cv.positive_int,
+        vol.Optional(CONF_SLAVE): cv.positive_int,
+        vol.Optional(CONF_VERIFY_STATE, default=True): cv.boolean,
+        vol.Exclusive(CALL_TYPE_COIL, CONF_INPUT_TYPE): cv.positive_int,
+        vol.Exclusive(CONF_REGISTER, CONF_INPUT_TYPE): cv.positive_int,
+    },
+)
+
+LIGHT_SCHEMA = vol.All(
+    cv.has_at_least_one_key(CALL_TYPE_COIL, CONF_REGISTER),
+    cv.key_dependency(CONF_COMMAND_ON, CONF_REGISTER),
+    cv.key_dependency(CONF_COMMAND_OFF, CONF_REGISTER),
+    SWITCH_BASE_SCHEMA,
+)
+
 SERIAL_SCHEMA = BASE_SCHEMA.extend(
     {
         vol.Required(CONF_BAUDRATE): cv.positive_int,
@@ -137,6 +163,7 @@ SERIAL_SCHEMA = BASE_SCHEMA.extend(
         vol.Optional(CONF_TIMEOUT, default=3): cv.socket_timeout,
         vol.Optional(CONF_CLIMATES): vol.All(cv.ensure_list, [CLIMATE_SCHEMA]),
         vol.Optional(CONF_COVERS): vol.All(cv.ensure_list, [COVERS_SCHEMA]),
+        vol.Optional(CONF_LIGHTS): vol.All(cv.ensure_list, [LIGHT_SCHEMA]),
     }
 )
 
@@ -149,6 +176,7 @@ ETHERNET_SCHEMA = BASE_SCHEMA.extend(
         vol.Optional(CONF_DELAY, default=0): cv.positive_int,
         vol.Optional(CONF_CLIMATES): vol.All(cv.ensure_list, [CLIMATE_SCHEMA]),
         vol.Optional(CONF_COVERS): vol.All(cv.ensure_list, [COVERS_SCHEMA]),
+        vol.Optional(CONF_LIGHTS): vol.All(cv.ensure_list, [LIGHT_SCHEMA]),
     }
 )
 
