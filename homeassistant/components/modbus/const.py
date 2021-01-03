@@ -17,7 +17,7 @@ CONF_OFFSET = "offset"
 CONF_COILS = "coils"
 
 # integration names
-DEFAULT_HUB = "default"
+DEFAULT_HUB = "modbusHub"
 MODBUS_DOMAIN = "modbus"
 
 # data types
@@ -69,6 +69,7 @@ CONF_VERIFY_STATE = "verify_state"
 
 # climate.py
 CONF_CLIMATES = "climates"
+CONF_CLIMATE = "climate"
 CONF_TARGET_TEMP = "target_temp_register"
 CONF_CURRENT_TEMP = "current_temp_register"
 CONF_CURRENT_TEMP_REGISTER_TYPE = "current_temp_register_type"
@@ -82,6 +83,7 @@ DEFAULT_STRUCTURE_PREFIX = ">f"
 DEFAULT_TEMP_UNIT = "C"
 
 # cover.py
+CONF_COVER = "cover"
 CONF_STATE_OPEN = "state_open"
 CONF_STATE_CLOSED = "state_closed"
 CONF_STATE_OPENING = "state_opening"
