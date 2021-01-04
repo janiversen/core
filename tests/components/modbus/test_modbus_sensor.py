@@ -234,13 +234,12 @@ from .conftest import base_test
         ),
     ],
 )
-async def test_all_sensor(hass, mock_hub, cfg, regs, expected):
+async def test_all_sensor(hass, ModbusHubMock, cfg, regs, expected):
     """Run test for sensor."""
     sensor_name = "modbus_test_sensor"
     await base_test(
         sensor_name,
         hass,
-        mock_hub,
         {
             CONF_REGISTERS: [
                 dict(**{CONF_NAME: sensor_name, CONF_REGISTER: 1234}, **cfg)
@@ -248,7 +247,6 @@ async def test_all_sensor(hass, mock_hub, cfg, regs, expected):
         },
         SENSOR_DOMAIN,
         5,
-        cfg.get(CONF_REGISTER_TYPE),
         regs,
         expected,
     )

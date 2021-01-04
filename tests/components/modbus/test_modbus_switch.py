@@ -3,7 +3,6 @@ import pytest
 
 from homeassistant.components.modbus.const import (
     CALL_TYPE_COIL,
-    CALL_TYPE_REGISTER_HOLDING,
     CONF_COILS,
     CONF_REGISTER,
     CONF_REGISTERS,
@@ -46,13 +45,12 @@ from .conftest import base_test
         ),
     ],
 )
-async def test_coil_switch(hass, mock_hub, regs, expected):
+async def test_coil_switch(hass, ModbusHubMock, regs, expected):
     """Run test for given config."""
     switch_name = "modbus_test_switch"
     await base_test(
         switch_name,
         hass,
-        mock_hub,
         {
             CONF_COILS: [
                 {CONF_NAME: switch_name, CALL_TYPE_COIL: 1234, CONF_SLAVE: 1},
@@ -60,7 +58,6 @@ async def test_coil_switch(hass, mock_hub, regs, expected):
         },
         SWITCH_DOMAIN,
         5,
-        CALL_TYPE_COIL,
         regs,
         expected,
     )
@@ -91,13 +88,12 @@ async def test_coil_switch(hass, mock_hub, regs, expected):
         ),
     ],
 )
-async def test_register_switch(hass, mock_hub, regs, expected):
+async def test_register_switch(hass, ModbusHubMock, regs, expected):
     """Run test for given config."""
     switch_name = "modbus_test_switch"
     await base_test(
         switch_name,
         hass,
-        mock_hub,
         {
             CONF_REGISTERS: [
                 {
@@ -111,7 +107,6 @@ async def test_register_switch(hass, mock_hub, regs, expected):
         },
         SWITCH_DOMAIN,
         5,
-        CALL_TYPE_REGISTER_HOLDING,
         regs,
         expected,
     )
@@ -134,13 +129,12 @@ async def test_register_switch(hass, mock_hub, regs, expected):
         ),
     ],
 )
-async def test_register_state_switch(hass, mock_hub, regs, expected):
+async def test_register_state_switch(hass, ModbusHubMock, regs, expected):
     """Run test for given config."""
     switch_name = "modbus_test_switch"
     await base_test(
         switch_name,
         hass,
-        mock_hub,
         {
             CONF_REGISTERS: [
                 {
@@ -154,7 +148,6 @@ async def test_register_state_switch(hass, mock_hub, regs, expected):
         },
         SWITCH_DOMAIN,
         5,
-        CALL_TYPE_REGISTER_HOLDING,
         regs,
         expected,
     )

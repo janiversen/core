@@ -46,7 +46,7 @@ def modbus_setup(
     hass.data[DOMAIN] = hub_collect = {}
 
     for conf_hub in config[DOMAIN]:
-        hub_collect[conf_hub[CONF_NAME]] = modbusHub(conf_hub)
+        hub_collect[conf_hub[CONF_NAME]] = ModbusHub(conf_hub)
 
         # modbus needs to be activated before components are loaded
         # to avoid a racing problem
@@ -102,7 +102,7 @@ def modbus_setup(
     return True
 
 
-class modbusHub:
+class ModbusHub:
     """Thread safe wrapper class for pymodbus."""
 
     def __init__(self, client_config):
