@@ -36,7 +36,7 @@ from .const import (
     DEFAULT_HUB,
     MODBUS_DOMAIN,
 )
-from .modbus import ModbusHub
+from .modbus import modbusHub
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -86,11 +86,11 @@ async def async_setup_platform(
     switches = []
     if CONF_COILS in config:
         for coil in config[CONF_COILS]:
-            hub: ModbusHub = hass.data[MODBUS_DOMAIN][coil[CONF_HUB]]
+            hub: modbusHub = hass.data[MODBUS_DOMAIN][coil[CONF_HUB]]
             switches.append(ModbusCoilSwitch(hub, coil))
     if CONF_REGISTERS in config:
         for register in config[CONF_REGISTERS]:
-            hub: ModbusHub = hass.data[MODBUS_DOMAIN][register[CONF_HUB]]
+            hub: modbusHub = hass.data[MODBUS_DOMAIN][register[CONF_HUB]]
             switches.append(ModbusRegisterSwitch(hub, register))
 
     async_add_entities(switches)
@@ -99,9 +99,9 @@ async def async_setup_platform(
 class ModbusBaseSwitch(ToggleEntity, RestoreEntity, ABC):
     """Base class representing a Modbus switch."""
 
-    def __init__(self, hub: ModbusHub, config: Dict[str, Any]):
+    def __init__(self, hub: modbusHub, config: Dict[str, Any]):
         """Initialize the switch."""
-        self._hub: ModbusHub = hub
+        self._hub: modbusHub = hub
         self._name = config[CONF_NAME]
         self._slave = config.get(CONF_SLAVE)
         self._is_on = None
@@ -133,7 +133,7 @@ class ModbusBaseSwitch(ToggleEntity, RestoreEntity, ABC):
 class ModbusCoilSwitch(ModbusBaseSwitch, SwitchEntity):
     """Representation of a Modbus coil switch."""
 
-    def __init__(self, hub: ModbusHub, config: Dict[str, Any]):
+    def __init__(self, hub: modbusHub, config: Dict[str, Any]):
         """Initialize the coil switch."""
         super().__init__(hub, config)
         self._coil = config[CALL_TYPE_COIL]
@@ -184,7 +184,7 @@ class ModbusCoilSwitch(ModbusBaseSwitch, SwitchEntity):
 class ModbusRegisterSwitch(ModbusBaseSwitch, SwitchEntity):
     """Representation of a Modbus register switch."""
 
-    def __init__(self, hub: ModbusHub, config: Dict[str, Any]):
+    def __init__(self, hub: modbusHub, config: Dict[str, Any]):
         """Initialize the register switch."""
         super().__init__(hub, config)
         self._register = config[CONF_REGISTER]

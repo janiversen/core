@@ -1,6 +1,6 @@
 """The tests for the Modbus sensor component."""
+from datetime import timedelta
 from unittest import mock
-from unittest.mock import patch
 
 import pytest
 
@@ -21,7 +21,7 @@ from tests.common import async_fire_time_changed
 @pytest.fixture()
 def mock_hub(hass):
     """Mock hub."""
-    with patch("homeassistant.components.modbus.setup", return_value=True):
+    with mock.patch("homeassistant.components.modbus.setup", return_value=True):
         hub = mock.MagicMock()
         hub.name = "hub"
         hass.data[DOMAIN] = {DEFAULT_HUB: hub}
@@ -37,15 +37,18 @@ class ReadResult:
         self.bits = register_words
 
 
-async def setup_base_test(
+async def base_test(
     sensor_name,
     hass,
     use_mock_hub,
     data_array,
     entity_domain,
     scan_interval,
+    register_type,
+    register_words,
+    expected,
 ):
-    """Run setup device for given config."""
+    """Run test on device for given config."""
 
     # Full sensor configuration
     config = {
@@ -66,19 +69,6 @@ async def setup_base_test(
     device = hass.states.get(entity_id)
     if device is None:
         pytest.fail("CONFIG failed, see output")
-    return entity_id, now, device
-
-
-async def run_base_read_test(
-    entity_id,
-    hass,
-    use_mock_hub,
-    register_type,
-    register_words,
-    expected,
-    now,
-):
-    """Run test for given config."""
 
     # Setup inputs for the sensor
     read_result = ReadResult(register_words)
@@ -92,6 +82,7 @@ async def run_base_read_test(
         use_mock_hub.read_holding_registers.return_value = read_result
 
     # Trigger update call with time_changed event
+    now = now + timedelta(seconds=scan_interval + 1)
     with mock.patch("homeassistant.helpers.event.dt_util.utcnow", return_value=now):
         async_fire_time_changed(hass, now)
         await hass.async_block_till_done()

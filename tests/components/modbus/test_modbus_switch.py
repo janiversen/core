@@ -1,6 +1,4 @@
 """The tests for the Modbus switch component."""
-from datetime import timedelta
-
 import pytest
 
 from homeassistant.components.modbus.const import (
@@ -20,7 +18,7 @@ from homeassistant.const import (
     STATE_ON,
 )
 
-from .conftest import run_base_read_test, setup_base_test
+from .conftest import base_test
 
 
 @pytest.mark.parametrize(
@@ -51,8 +49,7 @@ from .conftest import run_base_read_test, setup_base_test
 async def test_coil_switch(hass, mock_hub, regs, expected):
     """Run test for given config."""
     switch_name = "modbus_test_switch"
-    scan_interval = 5
-    entity_id, now, device = await setup_base_test(
+    await base_test(
         switch_name,
         hass,
         mock_hub,
@@ -62,17 +59,10 @@ async def test_coil_switch(hass, mock_hub, regs, expected):
             ]
         },
         SWITCH_DOMAIN,
-        scan_interval,
-    )
-
-    await run_base_read_test(
-        entity_id,
-        hass,
-        mock_hub,
+        5,
         CALL_TYPE_COIL,
         regs,
         expected,
-        now + timedelta(seconds=scan_interval + 1),
     )
 
 
@@ -104,8 +94,7 @@ async def test_coil_switch(hass, mock_hub, regs, expected):
 async def test_register_switch(hass, mock_hub, regs, expected):
     """Run test for given config."""
     switch_name = "modbus_test_switch"
-    scan_interval = 5
-    entity_id, now, device = await setup_base_test(
+    await base_test(
         switch_name,
         hass,
         mock_hub,
@@ -121,17 +110,10 @@ async def test_register_switch(hass, mock_hub, regs, expected):
             ]
         },
         SWITCH_DOMAIN,
-        scan_interval,
-    )
-
-    await run_base_read_test(
-        entity_id,
-        hass,
-        mock_hub,
+        5,
         CALL_TYPE_REGISTER_HOLDING,
         regs,
         expected,
-        now + timedelta(seconds=scan_interval + 1),
     )
 
 
@@ -155,8 +137,7 @@ async def test_register_switch(hass, mock_hub, regs, expected):
 async def test_register_state_switch(hass, mock_hub, regs, expected):
     """Run test for given config."""
     switch_name = "modbus_test_switch"
-    scan_interval = 5
-    entity_id, now, device = await setup_base_test(
+    await base_test(
         switch_name,
         hass,
         mock_hub,
@@ -172,15 +153,8 @@ async def test_register_state_switch(hass, mock_hub, regs, expected):
             ]
         },
         SWITCH_DOMAIN,
-        scan_interval,
-    )
-
-    await run_base_read_test(
-        entity_id,
-        hass,
-        mock_hub,
+        5,
         CALL_TYPE_REGISTER_HOLDING,
         regs,
         expected,
-        now + timedelta(seconds=scan_interval + 1),
     )
