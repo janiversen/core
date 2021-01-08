@@ -13,6 +13,7 @@ from homeassistant.const import (
     CONF_COMMAND_ON,
     CONF_NAME,
     CONF_SLAVE,
+    CONF_SWITCHES,
     STATE_ON,
 )
 from homeassistant.helpers import config_validation as cv
@@ -84,6 +85,18 @@ async def async_setup_platform(
 ):
     """Read configuration and create Modbus switches."""
     switches = []
+
+    #  check for old config:
+    if discovery_info is None:
+        _LOGGER.warning(
+            "switch configuration depreciated, will be removed in a future release"
+        )
+        discovery_info = {
+            CONF_NAME: "noName",
+            CONF_SWITCHES: {**config},
+        }
+        # TBD later: config = None
+
     if CONF_COILS in config:
         for coil in config[CONF_COILS]:
             hub: ModbusHub = hass.data[MODBUS_DOMAIN][coil[CONF_HUB]]

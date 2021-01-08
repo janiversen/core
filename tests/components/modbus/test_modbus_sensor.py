@@ -13,15 +13,74 @@ from homeassistant.components.modbus.const import (
     CONF_REGISTERS,
     CONF_REVERSE_ORDER,
     CONF_SCALE,
+    CONF_SENSORS,
     DATA_TYPE_FLOAT,
     DATA_TYPE_INT,
     DATA_TYPE_STRING,
     DATA_TYPE_UINT,
 )
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
-from homeassistant.const import CONF_NAME
+from homeassistant.const import CONF_NAME, CONF_SCAN_INTERVAL, CONF_SLAVE
 
-from .conftest import base_test
+from .conftest import base_config_test, base_test
+
+
+@pytest.mark.parametrize(
+    "do_discovery, do_options",
+    [
+        (
+            False,
+            False,
+        ),
+        (
+            False,
+            True,
+        ),
+        (
+            True,
+            False,
+        ),
+        (
+            True,
+            True,
+        ),
+    ],
+)
+async def test_config_sensor(hass, ModbusHubMock, do_discovery, do_options):
+    """Run test for sensor."""
+    sensorName = "test_sensor"
+    configSensor = {
+        CONF_NAME: sensorName,
+        CONF_REGISTER: 51,
+    }
+    if do_options:
+        configSensor.update(
+            {
+                CONF_SLAVE: 10,
+                CONF_COUNT: 1,
+                CONF_DATA_TYPE: "int",
+                CONF_PRECISION: 0,
+                CONF_SCALE: 1,
+                CONF_REVERSE_ORDER: False,
+                CONF_OFFSET: 0,
+                CONF_REGISTER_TYPE: CALL_TYPE_REGISTER_HOLDING,
+            }
+        )
+        if do_discovery:
+            configSensor.update(
+                {
+                    CONF_SCAN_INTERVAL: 35,
+                }
+            )
+    await base_config_test(
+        hass,
+        configSensor,
+        sensorName,
+        SENSOR_DOMAIN,
+        CONF_SENSORS,
+        CONF_REGISTERS,
+        method_discovery=do_discovery,
+    )
 
 
 @pytest.mark.parametrize(
@@ -238,15 +297,14 @@ async def test_all_sensor(hass, ModbusHubMock, cfg, regs, expected):
     """Run test for sensor."""
     sensor_name = "modbus_test_sensor"
     await base_test(
-        sensor_name,
         hass,
-        {
-            CONF_REGISTERS: [
-                dict(**{CONF_NAME: sensor_name, CONF_REGISTER: 1234}, **cfg)
-            ]
-        },
+        {CONF_NAME: sensor_name, CONF_REGISTER: 1234, **cfg},
+        sensor_name,
         SENSOR_DOMAIN,
+        CONF_SENSORS,
+        CONF_REGISTERS,
         5,
         regs,
         expected,
+        method_discovery=False,
     )

@@ -40,68 +40,94 @@ class ReadResult:
         self.bits = register_words
 
 
-async def base_test(
-    sensor_name,
+async def base_config_test(
     hass,
-    data_array,
+    config_device,
+    device_name,
     entity_domain,
+    array_name_discovery,
+    array_name_old_config,
+    method_discovery=True,
+    config_modbus=None,
+    scan_interval=None,
+):
+    """Run test of config on platform/device for given config."""
+
+    if config_modbus is None:
+        config_modbus = {
+            DOMAIN: {
+                CONF_NAME: DEFAULT_HUB,
+                CONF_TYPE: "tcp",
+                CONF_HOST: "modbusTest",
+                CONF_PORT: 5001,
+            },
+        }
+
+    if method_discovery:
+        if config_device is not None:
+            config_modbus[DOMAIN].update({array_name_discovery: [{**config_device}]})
+        await async_load_platform(
+            hass, entity_domain, DOMAIN, config_modbus[DOMAIN], config_modbus
+        )
+    else:
+        # setup modbus first
+        assert await async_setup_component(hass, DOMAIN, config_modbus)
+
+        # then setup component (this is old style configuration)
+        if config_device is not None:
+            config_device = {
+                entity_domain: {
+                    CONF_PLATFORM: DOMAIN,
+                    array_name_old_config: [
+                        {
+                            **config_device,
+                        }
+                    ],
+                }
+            }
+            if scan_interval is not None:
+                config_device[entity_domain][CONF_SCAN_INTERVAL] = scan_interval
+            await hass.async_block_till_done()
+            assert await async_setup_component(hass, entity_domain, config_device)
+    await hass.async_block_till_done()
+
+    assert DOMAIN in hass.data
+    if config_device is not None:
+        entity_id = f"{entity_domain}.{device_name}"
+        device = hass.states.get(entity_id)
+        if device is None:
+            pytest.fail("CONFIG failed, see output")
+
+
+async def base_test(
+    hass,
+    config_device,
+    device_name,
+    entity_domain,
+    array_name_discovery,
+    array_name_old_config,
     scan_interval,
     register_words,
     expected,
-    method_discovery=False,
+    method_discovery=True,
 ):
     """Run test on device for given config."""
-
-    # Full sensor configuration
-    if method_discovery:
-        config = {
-            DOMAIN: {
-                CONF_NAME: DEFAULT_HUB,
-                CONF_TYPE: "tcp",
-                CONF_HOST: "modbusTest",
-                CONF_PORT: 5001,
-                **data_array,
-            },
-        }
-    else:
-        config = {
-            DOMAIN: {
-                CONF_NAME: DEFAULT_HUB,
-                CONF_TYPE: "tcp",
-                CONF_HOST: "modbusTest",
-                CONF_PORT: 5001,
-            },
-        }
-        configDeviceOLD = {
-            entity_domain: {
-                CONF_PLATFORM: DOMAIN,
-                CONF_SCAN_INTERVAL: scan_interval,
-                **data_array,
-            }
-        }
 
     # mock timer and add modbus platform with devices (new config)
     # first add modbus platform, then devices (old config)
     now = dt_util.utcnow()
     with mock.patch("homeassistant.helpers.event.dt_util.utcnow", return_value=now):
-        # setup modbus platform
-        if method_discovery:
-            await async_load_platform(
-                hass, entity_domain, DOMAIN, config[DOMAIN], config
-            )
-        else:
-            # setup modbus old style
-            assert await async_setup_component(hass, DOMAIN, config)
-            await hass.async_block_till_done()
-
-            # setup component old style
-            assert await async_setup_component(
-                hass,
-                entity_domain,
-                configDeviceOLD,
-            )
-
-        await hass.async_block_till_done()
+        # setup modbus and device platforms
+        await base_config_test(
+            hass,
+            config_device,
+            device_name,
+            entity_domain,
+            array_name_discovery,
+            array_name_old_config,
+            method_discovery,
+            scan_interval=scan_interval,
+        )
 
     # Setup inputs for the sensor
     read_result = ReadResult(register_words)
@@ -110,11 +136,7 @@ async def base_test(
     hub.read_discrete_inputs.return_value = read_result
     hub.read_input_registers.return_value = read_result
     hub.read_holding_registers.return_value = read_result
-
-    entity_id = f"{entity_domain}.{sensor_name}"
-    device = hass.states.get(entity_id)
-    if device is None:
-        pytest.fail("CONFIG failed, see output")
+    hub.name = "magicMock"
 
     # Trigger update call with time_changed event
     now = now + timedelta(seconds=scan_interval + 1)
@@ -123,5 +145,6 @@ async def base_test(
         await hass.async_block_till_done()
 
     # Check state
+    entity_id = f"{entity_domain}.{device_name}"
     state = hass.states.get(entity_id).state
     assert state == expected

@@ -18,6 +18,11 @@ from homeassistant.const import (
 )
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.restore_state import RestoreEntity
+from homeassistant.helpers.typing import (
+    ConfigType,
+    DiscoveryInfoType,
+    HomeAssistantType,
+)
 
 from .const import (
     CALL_TYPE_REGISTER_HOLDING,
@@ -31,6 +36,7 @@ from .const import (
     CONF_REGISTERS,
     CONF_REVERSE_ORDER,
     CONF_SCALE,
+    CONF_SENSORS,
     DATA_TYPE_CUSTOM,
     DATA_TYPE_FLOAT,
     DATA_TYPE_INT,
@@ -97,11 +103,27 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 )
 
 
-def setup_platform(hass, config, add_entities, discovery_info=None):
+async def async_setup_platform(
+    hass: HomeAssistantType,
+    config: ConfigType,
+    async_add_entities,
+    discovery_info: Optional[DiscoveryInfoType] = None,
+):
     """Set up the Modbus sensors."""
     sensors = []
 
-    for register in config[CONF_REGISTERS]:
+    #  check for old config:
+    if discovery_info is None:
+        _LOGGER.warning(
+            "Sensor configuration depreciated, will be removed in a future release"
+        )
+        discovery_info = {
+            CONF_NAME: "noName",
+            CONF_SENSORS: config[CONF_REGISTERS],
+        }
+        config = None
+
+    for register in discovery_info[CONF_SENSORS]:
         if register[CONF_DATA_TYPE] == DATA_TYPE_STRING:
             structure = str(register[CONF_COUNT] * 2) + "s"
         elif register[CONF_DATA_TYPE] != DATA_TYPE_CUSTOM:
@@ -130,8 +152,9 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
             )
             continue
 
-        hub_name = register[CONF_HUB]
-        hub = hass.data[MODBUS_DOMAIN][hub_name]
+        if CONF_HUB not in register:
+            register[CONF_HUB] = discovery_info[CONF_NAME]
+        hub = hass.data[MODBUS_DOMAIN][register[CONF_HUB]]
         sensors.append(
             ModbusRegisterSensor(
                 hub,
@@ -153,7 +176,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
     if not sensors:
         return False
-    add_entities(sensors)
+    async_add_entities(sensors)
 
 
 class ModbusRegisterSensor(RestoreEntity):

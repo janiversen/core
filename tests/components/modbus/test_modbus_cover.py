@@ -6,12 +6,46 @@ from homeassistant.components.modbus.const import CALL_TYPE_COIL, CONF_REGISTER
 from homeassistant.const import (
     CONF_COVERS,
     CONF_NAME,
+    CONF_SCAN_INTERVAL,
     CONF_SLAVE,
     STATE_OPEN,
     STATE_OPENING,
 )
 
-from .conftest import base_test
+from .conftest import base_config_test, base_test
+
+
+@pytest.mark.parametrize(
+    "do_options, read_type",
+    [
+        (False, CALL_TYPE_COIL),
+        (True, CALL_TYPE_COIL),
+        (False, CONF_REGISTER),
+        (True, CONF_REGISTER),
+    ],
+)
+async def test_config_cover(hass, ModbusHubMock, do_options, read_type):
+    """Run test for cover."""
+    deviceName = "test_cover"
+    deviceConfig = {
+        CONF_NAME: deviceName,
+        read_type: 1234,
+    }
+    if do_options:
+        deviceConfig.update(
+            {
+                CONF_SLAVE: 10,
+                CONF_SCAN_INTERVAL: 20,
+            }
+        )
+    await base_config_test(
+        hass,
+        deviceConfig,
+        deviceName,
+        COVER_DOMAIN,
+        CONF_COVERS,
+        None,
+    )
 
 
 @pytest.mark.parametrize(
@@ -43,22 +77,19 @@ async def test_coil_cover(hass, ModbusHubMock, regs, expected):
     """Run test for given config."""
     cover_name = "modbus_test_cover"
     await base_test(
-        cover_name,
         hass,
         {
-            CONF_COVERS: [
-                {
-                    CONF_NAME: cover_name,
-                    CALL_TYPE_COIL: 1234,
-                    CONF_SLAVE: 1,
-                },
-            ]
+            CONF_NAME: cover_name,
+            CALL_TYPE_COIL: 1234,
+            CONF_SLAVE: 1,
         },
+        cover_name,
         COVER_DOMAIN,
+        CONF_COVERS,
+        None,
         5,
         regs,
         expected,
-        method_discovery=True,
     )
 
 
@@ -91,20 +122,17 @@ async def test_register_COVER(hass, ModbusHubMock, regs, expected):
     """Run test for given config."""
     cover_name = "modbus_test_cover"
     await base_test(
-        cover_name,
         hass,
         {
-            CONF_COVERS: [
-                {
-                    CONF_NAME: cover_name,
-                    CONF_REGISTER: 1234,
-                    CONF_SLAVE: 1,
-                },
-            ]
+            CONF_NAME: cover_name,
+            CONF_REGISTER: 1234,
+            CONF_SLAVE: 1,
         },
+        cover_name,
         COVER_DOMAIN,
+        CONF_COVERS,
+        None,
         5,
         regs,
         expected,
-        method_discovery=True,
     )
